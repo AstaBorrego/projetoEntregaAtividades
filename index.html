@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal de Entregas Acadêmicas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- TELA INICIAL (LANDING PAGE) -->
+    <div id="homeScreen" class="screen active">
+      <h1>Portal de Entregas Acadêmicas</h1>
+      <p class="subtitle">Selecione o seu perfil de acesso abaixo:</p>
+      <div class="btn-group-home">
+        <button class="btn btn-primary" onclick="showScreen('studentScreen')">Sou Aluno</button>
+        <button class="btn btn-secondary" onclick="showScreen('loginScreen')">Sou Professor</button>
+      </div>
+    </div>
+
+    <!-- TELA DO ALUNO -->
+    <div id="studentScreen" class="screen">
+      <h2>Envio de Atividade</h2>
+      <div id="studentMsg" class="message"></div>
+      <form id="studentForm" novalidate>
+        
+        <div class="form-group">
+          <label>Selecione o Polo:</label>
+          <div class="radio-group">
+            <label class="radio-label"><input type="radio" name="polo" value="Polo 5"> Polo 5</label>
+            <label class="radio-label"><input type="radio" name="polo" value="Polo 6"> Polo 6</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Selecione o Turno:</label>
+          <div class="radio-group">
+            <label class="radio-label"><input type="radio" name="turno" value="Manhã"> Manhã</label>
+            <label class="radio-label"><input type="radio" name="turno" value="Tarde"> Tarde</label>
+            <label class="radio-label"><input type="radio" name="turno" value="Noite"> Noite</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Selecione o Módulo:</label>
+          <div class="radio-group">
+            <label class="radio-label"><input type="radio" name="modulo" value="Módulo 1"> Módulo 1</label>
+            <label class="radio-label"><input type="radio" name="modulo" value="Módulo 2"> Módulo 2</label>
+            <label class="radio-label"><input type="radio" name="modulo" value="Módulo 3"> Módulo 3</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="descricao">Descrição da Atividade:</label>
+          <textarea id="descricao" rows="10" placeholder="Descreva aqui os detalhes da atividade..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="urlTrabalho">Link do Trabalho:</label>
+          <input type="url" id="urlTrabalho" placeholder="insira o link do trabalho">
+        </div>
+
+        <div class="btn-actions">
+          <button type="submit" class="btn btn-primary btn-flex">Enviar Atividade</button>
+          <button type="button" class="btn btn-outline" onclick="showScreen('homeScreen')">Voltar</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- TELA DE LOGIN DO PROFESSOR -->
+    <div id="loginScreen" class="screen">
+      <h2>Área do Professor - Login</h2>
+      <div id="loginMsg" class="message"></div>
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="profEmail">E-mail:</label>
+          <input type="email" id="profEmail" placeholder="professor@escola.com">
+        </div>
+        <div class="form-group">
+          <label for="profPassword">Senha:</label>
+          <input type="password" id="profPassword" placeholder="******">
+        </div>
+        <div class="btn-actions">
+          <button type="submit" class="btn btn-primary btn-flex">Entrar</button>
+          <button type="button" class="btn btn-outline" onclick="showScreen('homeScreen')">Voltar</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- TELA DE PAINEL DO PROFESSOR (IMPRESSÃO) -->
+    <div id="teacherDashboard" class="screen">
+      <h2>Painel do Professor</h2>
+      <p class="subtitle">Selecione os filtros para gerar o relatório de impressão:</p>
+      
+      <div class="form-group">
+        <label for="tipoImpressao">Tipo de Impressão:</label>
+        <select id="tipoImpressao">
+          <option value="todos">Todas as Atividades (Por Aluno)</option>
+          <option value="polo">Filtrar por Polo</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="grupoSelectPolo" style="display: none;">
+        <label for="selectPoloFiltro">Selecione o Polo:</label>
+        <select id="selectPoloFiltro">
+          <option value="Polo 5">Polo 5</option>
+          <option value="Polo 6">Polo 6</option>
+        </select>
+      </div>
+
+      <div class="btn-actions no-print">
+        <button type="button" id="btnImprimir" class="btn btn-primary">Imprimir Relatório</button>
+        <button type="button" class="btn btn-outline" onclick="showScreen('homeScreen')">Sair</button>
+      </div>
+
+      <!-- Área invisível na tela normal, visível na Impressão -->
+      <div id="printArea"></div>
+    </div>
+
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
