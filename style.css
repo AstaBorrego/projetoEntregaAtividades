@@ -1,199 +1,330 @@
+/* Declaração das variáveis globais CSS no elemento raiz */
 :root {
+  /* Cor primária para botões e destaques */
   --primary: #2563eb;
+  /* Cor primária para estado de hover */
   --primary-hover: #1d4ed8;
+  /* Cor do fundo geral da página */
   --bg: #f8fafc;
+  /* Cor do fundo dos cartões/containers */
   --card-bg: #ffffff;
+  /* Cor do texto principal */
   --text: #1e293b;
+  /* Cor utilizada em bordas */
   --border: #e2e8f0;
 }
 
+/* Regra universal para resetar margens, preenchimentos e definir box-sizing */
 * {
+  /* Garante que largura e altura incluam borda e padding */
   box-sizing: border-box;
+  /* Zera as margens padrões dos elementos */
   margin: 0;
+  /* Zera o preenchimento padrão dos elementos */
   padding: 0;
+  /* Configura a família de fontes padrão da aplicação */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Estilização do corpo da página (body) */
 body {
+  /* Aplica a cor de fundo definida na variável global */
   background-color: var(--bg);
+  /* Define a cor padrão do texto */
   color: var(--text);
+  /* Utiliza layout Flexbox no body */
   display: flex;
+  /* Centraliza os elementos na horizontal */
   justify-content: center;
+  /* Centraliza os elementos na vertical */
   align-items: center;
+  /* Garante que o container ocupe no mínimo 100% da altura da tela */
   min-height: 100vh;
+  /* Adiciona espaçamento nas bordas da janela */
   padding: 20px;
 }
 
+/* Estilização do container principal do cartão */
 .container {
+  /* Define a cor do fundo do cartão */
   background: var(--card-bg);
+  /* Adiciona espaçamento interno no cartão */
   padding: 2rem;
+  /* Adiciona bordas arredondadas ao container */
   border-radius: 12px;
+  /* Aplica sombra suave ao redor do cartão */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  /* Ocupa toda a largura disponível respeitando o máximo */
   width: 100%;
+  /* Restringe a largura máxima a 650px */
   max-width: 650px;
 }
 
+/* Estilização dos títulos principais h1 e h2 */
 h1, h2 {
+  /* Define o espaçamento abaixo do título */
   margin-bottom: 1.5rem;
+  /* Centraliza o texto dos títulos */
   text-align: center;
+  /* Define a cor dos títulos */
   color: #0f172a;
 }
 
+/* Estilização da classe de subtítulos */
 .subtitle {
+  /* Centraliza o texto do subtítulo */
   text-align: center;
+  /* Define uma cor cinza para os subtítulos */
   color: #64748b;
+  /* Espaçamento inferior do subtítulo */
   margin-bottom: 1.5rem;
 }
 
+/* Grupo de botões exibidos na tela inicial */
 .btn-group-home {
+  /* Exibe os botões em linha com flexbox */
   display: flex;
+  /* Define espaçamento entre os botões */
   gap: 1.5rem;
+  /* Centraliza os botões horizontalmente */
   justify-content: center;
+  /* Adiciona espaçamento acima do grupo */
   margin-top: 1rem;
 }
 
+/* Container de ações contendo os botões dos formulários */
 .btn-actions {
+  /* Alinha os botões em linha */
   display: flex;
+  /* Define espaçamento interno entre os botões */
   gap: 1rem;
+  /* Espaçamento superior acima da área dos botões */
   margin-top: 1.5rem;
 }
 
+/* Classe utilitária para botões que precisam expandir igualmente */
 .btn-flex {
+  /* Faz o botão preencher o espaço disponível igualmente */
   flex: 1;
 }
 
+/* Estilização genérica dos botões */
 .btn {
+  /* Define o padding do botão */
   padding: 0.75rem 1.5rem;
+  /* Define o tamanho da fonte */
   font-size: 1rem;
+  /* Define o peso em negrito para a fonte */
   font-weight: 600;
+  /* Remove a borda padrão do elemento botão */
   border: none;
+  /* Arredonda os cantos dos botões */
   border-radius: 8px;
+  /* Modifica o ponteiro do mouse para o ícone de mãozinha */
   cursor: pointer;
+  /* Transição suave nas alterações de estados (hover) */
   transition: all 0.2s;
 }
 
-.btn-primary { 
-  background: var(--primary); 
-  color: white; 
+/* Estilo do botão primário */
+.btn-primary {
+  /* Cor de fundo azul primária */
+  background: var(--primary);
+  /* Cor do texto branca */
+  color: white;
 }
 
-.btn-primary:hover { 
-  background: var(--primary-hover); 
+/* Efeito ao passar o mouse por cima do botão primário */
+.btn-primary:hover {
+  /* Aplica cor azul mais escura ao passar o mouse */
+  background: var(--primary-hover);
 }
 
-.btn-secondary { 
-  background: #64748b; 
-  color: white; 
+/* Estilo do botão secundário */
+.btn-secondary {
+  /* Fundo na cor cinza */
+  background: #64748b;
+  /* Texto na cor branca */
+  color: white;
 }
 
-.btn-secondary:hover { 
-  background: #475569; 
+/* Efeito ao passar o mouse por cima do botão secundário */
+.btn-secondary:hover {
+  /* Escurece a cor cinza no hover */
+  background: #475569;
 }
 
-.btn-outline { 
-  background: transparent; 
-  border: 1px solid var(--border); 
-  color: var(--text); 
+/* Estilo para botões do tipo outline (com contorno) */
+.btn-outline {
+  /* Fundo transparente */
+  background: transparent;
+  /* Adiciona borda fina com a cor definida no root */
+  border: 1px solid var(--border);
+  /* Define a cor padrão do texto */
+  color: var(--text);
 }
 
+/* Grupo que engloba rótulo e campos de formulário */
 .form-group {
+  /* Adiciona espaçamento inferior entre campos do formulário */
   margin-bottom: 1.25rem;
 }
 
+/* Estilização dos rótulos de campos */
 label {
+  /* Faz o label se comportar como bloco */
   display: block;
+  /* Aplica fonte em negrito aos labels */
   font-weight: 600;
+  /* Adiciona espaço abaixo do label */
   margin-bottom: 0.5rem;
 }
 
+/* Regras aplicadas aos campos de formulário */
 input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="url"],
+input[type="number"],
 textarea,
 select {
+  /* Faz com que os campos ocupem toda a largura do pai */
   width: 100%;
+  /* Define espaçamento interno de preenchimento dos campos */
   padding: 0.75rem;
+  /* Adiciona borda fina cinza */
   border: 1px solid var(--border);
+  /* Arredonda os cantos dos campos */
   border-radius: 6px;
+  /* Configura o tamanho da fonte interna */
   font-size: 0.95rem;
 }
 
-/* Desabilita o redimensionamento da área de texto */
+/* Desabilita a opção de redimensionamento da área de texto pelo usuário */
 textarea {
+  /* Impede o redimensionamento da área de texto */
   resize: none;
 }
 
+/* Container do grupo de botões do tipo radio */
 .radio-group {
+  /* Exibe os botões em linha */
   display: flex;
+  /* Define o espaçamento entre as opções */
   gap: 1rem;
+  /* Permite quebra de linha em telas menores */
   flex-wrap: wrap;
 }
 
+/* Rótulo de cada opção radio */
 .radio-label {
+  /* Alinha a caixa radio e o texto em linha */
   display: flex;
+  /* Centraliza os elementos verticalmente */
   align-items: center;
+  /* Define pequeno espaço entre a bolinha radio e o texto */
   gap: 0.4rem;
+  /* Reseta a fonte para normal */
   font-weight: normal;
+  /* Altera o cursor do mouse para pointer */
   cursor: pointer;
 }
 
-.screen { 
-  display: none; 
-}
-
-.screen.active { 
-  display: block; 
-}
-
-.message {
-  padding: 0.75rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
+/* Oculta por padrão as telas inativas */
+.screen {
+  /* Oculta o elemento da árvore visual */
   display: none;
 }
 
-.message.error { 
-  background: #fee2e2; 
-  color: #991b1b; 
-  display: block; 
+/* Exibe a tela ativa */
+.screen.active {
+  /* Torna a tela visível como bloco */
+  display: block;
 }
 
-.message.success { 
-  background: #dcfce7; 
-  color: #166534; 
-  display: block; 
+/* Caixa genérica para mensagens de erro/sucesso */
+.message {
+  /* Preenchimento interno da mensagem */
+  padding: 0.75rem;
+  /* Cantos arredondados */
+  border-radius: 6px;
+  /* Espaçamento abaixo da caixa de mensagem */
+  margin-bottom: 1rem;
+  /* Oculta a mensagem por padrão */
+  display: none;
 }
 
+/* Estilo para caixa de mensagens de erro */
+.message.error {
+  /* Fundo vermelho claro */
+  background: #fee2e2;
+  /* Cor de texto vermelho escuro */
+  color: #991b1b;
+  /* Exibe a div de erro */
+  display: block;
+}
+
+/* Estilo para caixa de mensagens de sucesso */
+.message.success {
+  /* Fundo verde claro */
+  background: #dcfce7;
+  /* Cor de texto verde escuro */
+  color: #166534;
+  /* Exibe a div de sucesso */
+  display: block;
+}
+
+/* Div receptora do conteúdo de impressão */
 #printArea {
+  /* Adiciona espaçamento acima do painel de impressão */
   margin-top: 2rem;
 }
 
-/* Estilos para modo de Impressão */
+/* Configurações específicas aplicadas exclusivamente na hora de IMPRIMIR / GERAR PDF */
 @media print {
-  body * { 
-    visibility: hidden; 
+
+  /* Oculta absolutamente todos os elementos da página durante a impressão */
+  body * {
+    visibility: hidden;
   }
-  #printArea, #printArea * { 
-    visibility: visible; 
+
+  /* Mantém visível unicamente a área de impressão e seus descendentes */
+  #printArea, #printArea * {
+    visibility: visible;
   }
-  #printArea { 
-    position: absolute; 
-    left: 0; 
-    top: 0; 
-    width: 100%; 
+
+  /* Posiciona a área de impressão no topo absoluto da página */
+  #printArea {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
   }
-  .no-print { 
-    display: none !important; 
+
+  /* Garante a ocultação de elementos marcados com no-print */
+  .no-print {
+    display: none !important;
   }
-  table { 
-    width: 100%; 
-    border-collapse: collapse; 
-    margin-top: 10px; 
+
+  /* Define que cada bloco de aluno seja impresso em UMA PÁGINA individual */
+  .print-page {
+    /* Garante forçar a quebra de página logo após cada div do aluno */
+    page-break-after: always;
+    /* Aplica quebra de página padrão moderna */
+    break-after: page;
+    /* Adiciona padding na folha impressa */
+    padding: 20px;
+    /* Adiciona borda decorativa na folha */
+    border: 1px solid #ccc;
+    /* Adiciona espaçamento interno */
+    margin-bottom: 20px;
   }
-  th, td { 
-    border: 1px solid #000; 
-    padding: 8px; 
-    text-align: left; 
+
+  /* Ajusta o espaçamento dos parágrafos na folha de impressão */
+  .print-page p {
+    /* Define o tamanho da fonte no PDF */
+    font-size: 14pt;
+    /* Define espaçamento inferior nos itens */
+    margin-bottom: 10px;
   }
 }

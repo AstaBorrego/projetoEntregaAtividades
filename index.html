@@ -1,131 +1,354 @@
+<!-- Declaração do tipo de documento HTML5 -->
 <!DOCTYPE html>
+<!-- Abertura da tag html informando o idioma português do Brasil -->
 <html lang="pt-BR">
+<!-- Abertura do cabeçalho da página -->
 <head>
+  <!-- Definição da codificação de caracteres UTF-8 -->
   <meta charset="UTF-8">
+  <!-- Configuração de responsividade para dispositivos móveis -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Título que é exibido na aba do navegador -->
   <title>Portal de Entregas Acadêmicas</title>
+  <!-- Vinculação do arquivo CSS externo para estilização da página -->
   <link rel="stylesheet" href="style.css">
+<!-- Fechamento do cabeçalho -->
 </head>
+<!-- Abertura do corpo do documento HTML -->
 <body>
 
+  <!-- Container principal que centraliza o conteúdo na tela -->
   <div class="container">
     
     <!-- TELA INICIAL (LANDING PAGE) -->
+    <!-- Div que representa a tela inicial com a classe active para ser exibida por padrão -->
     <div id="homeScreen" class="screen active">
+      <!-- Título principal do sistema -->
       <h1>Portal de Entregas Acadêmicas</h1>
+      <!-- Subtítulo de instrução para o usuário -->
       <p class="subtitle">Selecione o seu perfil de acesso abaixo:</p>
+      <!-- Grupo de botões para escolha do perfil de acesso -->
       <div class="btn-group-home">
+        <!-- Botão para acessar a tela do aluno chamando a função showScreen -->
         <button class="btn btn-primary" onclick="showScreen('studentScreen')">Sou Aluno</button>
+        <!-- Botão para acessar a tela de login do professor chamando a função showScreen -->
         <button class="btn btn-secondary" onclick="showScreen('loginScreen')">Sou Professor</button>
+      <!-- Fechamento do grupo de botões -->
       </div>
+    <!-- Fechamento da tela inicial -->
     </div>
 
     <!-- TELA DO ALUNO -->
+    <!-- Div que representa a tela de envio do aluno -->
     <div id="studentScreen" class="screen">
+      <!-- Título da tela do aluno -->
       <h2>Envio de Atividade</h2>
+      <!-- Div reservada para mensagens de erro ou sucesso -->
       <div id="studentMsg" class="message"></div>
+      <!-- Formulário de envio de atividades do aluno sem validação nativa -->
       <form id="studentForm" novalidate>
         
+        <!-- Grupo de formulário para o nome do aluno -->
         <div class="form-group">
+          <!-- Rótulo do campo Nome do Aluno -->
           <label for="nomeAluno">Nome do Aluno:</label>
+          <!-- Campo de texto para digitar o nome completo do aluno -->
           <input type="text" id="nomeAluno" placeholder="Digite seu nome completo" required>
+        <!-- Fechamento do grupo de formulário -->
         </div>
 
+        <!-- Grupo de formulário para seleção do polo -->
         <div class="form-group">
+          <!-- Rótulo do grupo Polo -->
           <label>Selecione o Polo:</label>
+          <!-- Grupo de botões do tipo radio para seleção de polo -->
           <div class="radio-group">
+            <!-- Opção de seleção Polo 5 -->
             <label class="radio-label"><input type="radio" name="polo" value="Polo 5" required> Polo 5</label>
+            <!-- Opção de seleção Polo 6 -->
             <label class="radio-label"><input type="radio" name="polo" value="Polo 6" required> Polo 6</label>
+          <!-- Fechamento do grupo de radio buttons -->
           </div>
+        <!-- Fechamento do grupo de formulário -->
         </div>
 
+        <!-- Grupo de formulário para seleção do turno -->
         <div class="form-group">
+          <!-- Rótulo do grupo Turno -->
           <label>Selecione o Turno:</label>
+          <!-- Grupo de botões do tipo radio para seleção de turno -->
           <div class="radio-group">
+            <!-- Opção de seleção Turno Manhã -->
             <label class="radio-label"><input type="radio" name="turno" value="Manhã" required> Manhã</label>
+            <!-- Opção de seleção Turno Tarde -->
             <label class="radio-label"><input type="radio" name="turno" value="Tarde" required> Tarde</label>
+            <!-- Opção de seleção Turno Noite -->
             <label class="radio-label"><input type="radio" name="turno" value="Noite" required> Noite</label>
+          <!-- Fechamento do grupo de radio buttons -->
           </div>
+        <!-- Fechamento do grupo de formulário -->
         </div>
 
+        <!-- Grupo de formulário para seleção do módulo -->
         <div class="form-group">
+          <!-- Rótulo do grupo Módulo -->
           <label>Selecione o Módulo:</label>
+          <!-- Grupo de botões do tipo radio para seleção de módulo -->
           <div class="radio-group">
+            <!-- Opção de seleção Módulo 1 -->
             <label class="radio-label"><input type="radio" name="modulo" value="Módulo 1" required> Módulo 1</label>
+            <!-- Opção de seleção Módulo 2 -->
             <label class="radio-label"><input type="radio" name="modulo" value="Módulo 2" required> Módulo 2</label>
+            <!-- Opção de seleção Módulo 3 -->
             <label class="radio-label"><input type="radio" name="modulo" value="Módulo 3" required> Módulo 3</label>
+          <!-- Fechamento do grupo de radio buttons -->
           </div>
+        <!-- Fechamento do grupo de formulário -->
         </div>
 
+        <!-- Grupo de formulário para a descrição da atividade -->
         <div class="form-group">
+          <!-- Rótulo do campo Descrição da Atividade -->
           <label for="descricao">Descrição da Atividade:</label>
+          <!-- Área de texto para descrição dos detalhes da atividade -->
           <textarea id="descricao" rows="10" placeholder="Descreva aqui os detalhes da atividade..." required></textarea>
+        <!-- Fechamento do grupo de formulário -->
         </div>
 
+        <!-- Grupo de formulário para o link do trabalho -->
         <div class="form-group">
+          <!-- Rótulo do campo Link do Trabalho -->
           <label for="urlTrabalho">Link do Trabalho:</label>
+          <!-- Campo do tipo URL para inclusão do endereço web da atividade -->
           <input type="url" id="urlTrabalho" placeholder="insira o link do trabalho" required>
+        <!-- Fechamento do grupo de formulário -->
         </div>
 
+        <!-- Grupo de ações contendo os botões do formulário -->
         <div class="btn-actions">
+          <!-- Botão para enviar a atividade preenchida -->
           <button type="submit" class="btn btn-primary btn-flex">Enviar Atividade</button>
+          <!-- Botão para voltar à tela inicial chamando a função showScreen -->
           <button type="button" class="btn btn-outline" onclick="showScreen('homeScreen')">Voltar</button>
+        <!-- Fechamento do grupo de ações -->
         </div>
+      <!-- Fechamento do formulário do aluno -->
       </form>
+    <!-- Fechamento da tela do aluno -->
     </div>
 
     <!-- TELA DE LOGIN DO PROFESSOR -->
+    <!-- Div que representa a tela de autenticação do professor -->
     <div id="loginScreen" class="screen">
+      <!-- Título da tela de login do professor -->
       <h2>Área do Professor - Login</h2>
+      <!-- Div para exibir mensagens relativas ao login -->
       <div id="loginMsg" class="message"></div>
+      <!-- Formulário de autenticação do professor sem validação nativa -->
       <form id="loginForm" novalidate>
+        <!-- Grupo de formulário para o e-mail -->
         <div class="form-group">
+          <!-- Rótulo do campo E-mail -->
           <label for="profEmail">E-mail:</label>
+          <!-- Campo de entrada para o e-mail do professor -->
           <input type="email" id="profEmail" placeholder="professor@escola.com" required>
+        <!-- Fechamento do grupo de formulário -->
         </div>
+        <!-- Grupo de formulário para a senha -->
         <div class="form-group">
+          <!-- Rótulo do campo Senha -->
           <label for="profPassword">Senha:</label>
+          <!-- Campo de entrada para a senha do professor -->
           <input type="password" id="profPassword" placeholder="******" required>
+        <!-- Fechamento do grupo de formulário -->
         </div>
+        <!-- Grupo de ações com os botões de entrar e voltar -->
         <div class="btn-actions">
+          <!-- Botão de submissão do formulário para autenticação -->
           <button type="submit" class="btn btn-primary btn-flex">Entrar</button>
+          <!-- Botão para retornar à tela inicial -->
           <button type="button" class="btn btn-outline" onclick="showScreen('homeScreen')">Voltar</button>
+        <!-- Fechamento do grupo de ações -->
         </div>
+      <!-- Fechamento do formulário de login -->
       </form>
+    <!-- Fechamento da tela de login -->
     </div>
 
-    <!-- TELA DE PAINEL DO PROFESSOR (IMPRESSÃO) -->
+    <!-- TELA DE PAINEL DO PROFESSOR (COM MESMOS CAMPOS DO ALUNO E CONSULTA) -->
+    <!-- Div que representa o painel de consulta e avaliação do professor -->
     <div id="teacherDashboard" class="screen">
-      <h2>Painel do Professor</h2>
-      <p class="subtitle">Selecione os filtros para gerar o relatório de impressão:</p>
+      <!-- Título do painel do professor -->
+      <h2>Painel do Professor - Avaliação e Consulta</h2>
+      <!-- Mensagem informativa sobre as funcionalidades da tela -->
+      <div id="teacherMsg" class="message"></div>
+
+      <!-- Formulário do professor para exibição dos mesmos campos do aluno e atribuição de nota -->
+      <form id="teacherForm">
+        
+        <!-- Grupo de formulário para consulta dos alunos cadastrados -->
+        <div class="form-group">
+          <!-- Rótulo indicando a seleção do aluno -->
+          <label for="selectAluno">Selecione o Aluno (Consulta):</label>
+          <!-- ComboBox (Select) dinâmico preenchido com a lista de alunos -->
+          <select id="selectAluno">
+            <!-- Opção padrão incentivando o professor a selecionar -->
+            <option value="">-- Selecione um Aluno --</option>
+          <!-- Fechamento do campo ComboBox de seleção -->
+          </select>
+        <!-- Fechamento do grupo de formulário -->
+        </div>
+
+        <!-- Grupo de formulário do polo (desabilitado para apenas consulta do professor) -->
+        <div class="form-group">
+          <!-- Rótulo do campo de polo -->
+          <label>Polo do Aluno:</label>
+          <!-- Grupo de radio buttons desabilitados para o professor visualizar -->
+          <div class="radio-group">
+            <!-- Opção Polo 5 desabilitada -->
+            <label class="radio-label"><input type="radio" name="profPolo" value="Polo 5" disabled> Polo 5</label>
+            <!-- Opção Polo 6 desabilitada -->
+            <label class="radio-label"><input type="radio" name="profPolo" value="Polo 6" disabled> Polo 6</label>
+          <!-- Fechamento do grupo de radio buttons -->
+          </div>
+        <!-- Fechamento do grupo de formulário -->
+        </div>
+
+        <!-- Grupo de formulário do turno (desabilitado para visualização do professor) -->
+        <div class="form-group">
+          <!-- Rótulo do campo de turno -->
+          <label>Turno do Aluno:</label>
+          <!-- Grupo de radio buttons desabilitados referentes ao turno -->
+          <div class="radio-group">
+            <!-- Opção Manhã desabilitada -->
+            <label class="radio-label"><input type="radio" name="profTurno" value="Manhã" disabled> Manhã</label>
+            <!-- Opção Tarde desabilitada -->
+            <label class="radio-label"><input type="radio" name="profTurno" value="Tarde" disabled> Tarde</label>
+            <!-- Opção Noite desabilitada -->
+            <label class="radio-label"><input type="radio" name="profTurno" value="Noite" disabled> Noite</label>
+          <!-- Fechamento do grupo de radio buttons -->
+          </div>
+        <!-- Fechamento do grupo de formulário -->
+        </div>
+
+        <!-- Grupo de formulário do módulo (desabilitado para visualização do professor) -->
+        <div class="form-group">
+          <!-- Rótulo do campo de módulo -->
+          <label>Módulo do Aluno:</label>
+          <!-- Grupo de radio buttons desabilitados referentes ao módulo -->
+          <div class="radio-group">
+            <!-- Opção Módulo 1 desabilitada -->
+            <label class="radio-label"><input type="radio" name="profModulo" value="Módulo 1" disabled> Módulo 1</label>
+            <!-- Opção Módulo 2 desabilitada -->
+            <label class="radio-label"><input type="radio" name="profModulo" value="Módulo 2" disabled> Módulo 2</label>
+            <!-- Opção Módulo 3 desabilitada -->
+            <label class="radio-label"><input type="radio" name="profModulo" value="Módulo 3" disabled> Módulo 3</label>
+          <!-- Fechamento do grupo de radio buttons -->
+          </div>
+        <!-- Fechamento do grupo de formulário -->
+        </div>
+
+        <!-- Grupo de formulário da descrição enviada pelo aluno -->
+        <div class="form-group">
+          <!-- Rótulo da descrição do trabalho -->
+          <label for="profDescricao">Descrição da Atividade:</label>
+          <!-- Área de texto somente leitura com a descrição cadastrada -->
+          <textarea id="profDescricao" rows="5" readonly></textarea>
+        <!-- Fechamento do grupo de formulário -->
+        </div>
+
+        <!-- Grupo de formulário para acesso ao link enviado pelo aluno -->
+        <div class="form-group">
+          <!-- Rótulo do link do trabalho -->
+          <label for="profUrlTrabalho">Link do Trabalho:</label>
+          <!-- Container flexível contendo o input do link e o botão para abertura em nova aba -->
+          <div style="display: flex; gap: 0.5rem;">
+            <!-- Input que mostra a URL cadastrada pelo aluno -->
+            <input type="url" id="profUrlTrabalho" readonly>
+            <!-- Botão para abrir a URL em uma nova guia -->
+            <button type="button" id="btnAbrirLink" class="btn btn-secondary">Abrir</button>
+          <!-- Fechamento da div flexível -->
+          </div>
+        <!-- Fechamento do grupo de formulário -->
+        </div>
+
+        <!-- Campo exclusivo do Professor: Nota atribuída ao aluno -->
+        <div class="form-group">
+          <!-- Rótulo indicativo para o campo de nota -->
+          <label for="profNota">Nota do Aluno (Exclusivo para Professor):</label>
+          <!-- Input numérico para digitar a nota de 0 a 10 com suporte a decimais -->
+          <input type="number" id="profNota" min="0" max="10" step="0.1" placeholder="Atribua uma nota de 0 a 10">
+        <!-- Fechamento do grupo de formulário -->
+        </div>
+
+        <!-- Grupo com os botões de ação do professor na tela de formulário -->
+        <div class="btn-actions no-print">
+          <!-- Botão para salvar a nota informada no banco de dados -->
+          <button type="button" id="btnSalvarNota" class="btn btn-primary">Salvar Nota</button>
+          <!-- Botão para imprimir apenas a ficha do aluno atualmente selecionado -->
+          <button type="button" id="btnImprimirSelecionado" class="btn btn-secondary">Imprimir Aluno Selecionado</button>
+        <!-- Fechamento do grupo de botões de ação -->
+        </div>
+
+      <!-- Fechamento do formulário do professor -->
+      </form>
+
+      <!-- Linha horizontal divisória separando as seções de consulta e relatório geral -->
+      <hr style="margin: 2rem 0;">
+
+      <!-- Subtítulo referente às opções de impressão e filtro de relatórios gerais -->
+      <p class="subtitle">Ou selecione opções para gerar relatório de impressão geral (1 página por aluno):</p>
       
+      <!-- Grupo de formulário do select do tipo de impressão geral -->
       <div class="form-group">
-        <label for="tipoImpressao">Tipo de Impressão:</label>
+        <!-- Rótulo indicando o tipo de relatório -->
+        <label for="tipoImpressao">Tipo de Impressão Geral:</label>
+        <!-- Seleção do escopo da impressão geral (todos ou por polo) -->
         <select id="tipoImpressao">
+          <!-- Opção para buscar todos os alunos do sistema -->
           <option value="todos">Todas as Atividades (Por Aluno)</option>
+          <!-- Opção para aplicar um filtro específico de polo -->
           <option value="polo">Filtrar por Polo</option>
+        <!-- Fechamento do campo do tipo de impressão -->
         </select>
+      <!-- Fechamento do grupo de formulário -->
       </div>
 
+      <!-- Grupo de seleção do polo para impressão filtrada (inicia escondido) -->
       <div class="form-group" id="grupoSelectPolo" style="display: none;">
+        <!-- Rótulo para o polo desejado no filtro -->
         <label for="selectPoloFiltro">Selecione o Polo:</label>
+        <!-- Select contendo os polos disponíveis -->
         <select id="selectPoloFiltro">
+          <!-- Opção Polo 5 -->
           <option value="Polo 5">Polo 5</option>
+          <!-- Opção Polo 6 -->
           <option value="Polo 6">Polo 6</option>
+        <!-- Fechamento do campo de seleção de polo -->
         </select>
+      <!-- Fechamento do grupo de formulário -->
       </div>
 
+      <!-- Grupo de botões para ações de impressão geral e encerramento da sessão -->
       <div class="btn-actions no-print">
-        <button type="button" id="btnImprimir" class="btn btn-primary">Imprimir Relatório</button>
+        <!-- Botão para disparar o relatório geral de alunos -->
+        <button type="button" id="btnImprimirGeral" class="btn btn-primary">Imprimir Relatório Geral</button>
+        <!-- Botão para deslogar do sistema e retornar à página inicial -->
         <button type="button" class="btn btn-outline" onclick="showScreen('homeScreen')">Sair</button>
+      <!-- Fechamento do grupo de ações -->
       </div>
 
-      <!-- Área invisível na tela normal, visível na Impressão -->
+      <!-- Div responsável por receber o conteúdo gerado para ser impresso -->
       <div id="printArea"></div>
+    <!-- Fechamento da tela do painel do professor -->
     </div>
 
+  <!-- Fechamento do container principal -->
   </div>
 
+  <!-- Importação do código JavaScript principal definindo o tipo como módulo -->
   <script type="module" src="script.js"></script>
+<!-- Fechamento do corpo da página HTML -->
 </body>
+<!-- Fechamento da tag HTML -->
 </html>
