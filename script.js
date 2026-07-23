@@ -37,14 +37,15 @@ document.getElementById('studentForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const msgDiv = document.getElementById('studentMsg');
   
+  const nomeAluno = document.getElementById('nomeAluno').value.trim();
   const polo = document.querySelector('input[name="polo"]:checked')?.value;
   const turno = document.querySelector('input[name="turno"]:checked')?.value;
   const modulo = document.querySelector('input[name="modulo"]:checked')?.value;
   const descricao = document.getElementById('descricao').value.trim();
   const urlTrabalho = document.getElementById('urlTrabalho').value.trim();
 
-  // Validação personalizada de preenchimento dos campos
-  if (!polo || !turno || !modulo || !descricao || !urlTrabalho) {
+  // Validação personalizada de preenchimento de todos os campos obrigatórios
+  if (!nomeAluno || !polo || !turno || !modulo || !descricao || !urlTrabalho) {
     msgDiv.className = "message error";
     msgDiv.innerText = "Todos os campos devem ser preenchidos";
     return;
@@ -52,6 +53,7 @@ document.getElementById('studentForm').addEventListener('submit', async (e) => {
 
   try {
     await addDoc(collection(db, "atividade"), {
+      nomeAluno,
       polo,
       turno,
       modulo,
@@ -124,6 +126,7 @@ document.getElementById('btnImprimir').addEventListener('click', async () => {
     html += `<table>
       <thead>
         <tr>
+          <th>Aluno</th>
           <th>Polo</th>
           <th>Turno</th>
           <th>Módulo</th>
@@ -137,6 +140,7 @@ document.getElementById('btnImprimir').addEventListener('click', async () => {
       const data = doc.data();
       html += `
         <tr>
+          <td>${data.nomeAluno || 'Não informado'}</td>
           <td>${data.polo || ''}</td>
           <td>${data.turno || ''}</td>
           <td>${data.modulo || ''}</td>

@@ -27,39 +27,44 @@
       <form id="studentForm" novalidate>
         
         <div class="form-group">
+          <label for="nomeAluno">Nome do Aluno:</label>
+          <input type="text" id="nomeAluno" placeholder="Digite seu nome completo" required>
+        </div>
+
+        <div class="form-group">
           <label>Selecione o Polo:</label>
           <div class="radio-group">
-            <label class="radio-label"><input type="radio" name="polo" value="Polo 5"> Polo 5</label>
-            <label class="radio-label"><input type="radio" name="polo" value="Polo 6"> Polo 6</label>
+            <label class="radio-label"><input type="radio" name="polo" value="Polo 5" required> Polo 5</label>
+            <label class="radio-label"><input type="radio" name="polo" value="Polo 6" required> Polo 6</label>
           </div>
         </div>
 
         <div class="form-group">
           <label>Selecione o Turno:</label>
           <div class="radio-group">
-            <label class="radio-label"><input type="radio" name="turno" value="Manhã"> Manhã</label>
-            <label class="radio-label"><input type="radio" name="turno" value="Tarde"> Tarde</label>
-            <label class="radio-label"><input type="radio" name="turno" value="Noite"> Noite</label>
+            <label class="radio-label"><input type="radio" name="turno" value="Manhã" required> Manhã</label>
+            <label class="radio-label"><input type="radio" name="turno" value="Tarde" required> Tarde</label>
+            <label class="radio-label"><input type="radio" name="turno" value="Noite" required> Noite</label>
           </div>
         </div>
 
         <div class="form-group">
           <label>Selecione o Módulo:</label>
           <div class="radio-group">
-            <label class="radio-label"><input type="radio" name="modulo" value="Módulo 1"> Módulo 1</label>
-            <label class="radio-label"><input type="radio" name="modulo" value="Módulo 2"> Módulo 2</label>
-            <label class="radio-label"><input type="radio" name="modulo" value="Módulo 3"> Módulo 3</label>
+            <label class="radio-label"><input type="radio" name="modulo" value="Módulo 1" required> Módulo 1</label>
+            <label class="radio-label"><input type="radio" name="modulo" value="Módulo 2" required> Módulo 2</label>
+            <label class="radio-label"><input type="radio" name="modulo" value="Módulo 3" required> Módulo 3</label>
           </div>
         </div>
 
         <div class="form-group">
           <label for="descricao">Descrição da Atividade:</label>
-          <textarea id="descricao" rows="10" placeholder="Descreva aqui os detalhes da atividade..."></textarea>
+          <textarea id="descricao" rows="10" placeholder="Descreva aqui os detalhes da atividade..." required></textarea>
         </div>
 
         <div class="form-group">
           <label for="urlTrabalho">Link do Trabalho:</label>
-          <input type="url" id="urlTrabalho" placeholder="insira o link do trabalho">
+          <input type="url" id="urlTrabalho" placeholder="insira o link do trabalho" required>
         </div>
 
         <div class="btn-actions">
@@ -76,11 +81,11 @@
       <form id="loginForm" novalidate>
         <div class="form-group">
           <label for="profEmail">E-mail:</label>
-          <input type="email" id="profEmail" placeholder="professor@escola.com">
+          <input type="email" id="profEmail" placeholder="professor@escola.com" required>
         </div>
         <div class="form-group">
           <label for="profPassword">Senha:</label>
-          <input type="password" id="profPassword" placeholder="******">
+          <input type="password" id="profPassword" placeholder="******" required>
         </div>
         <div class="btn-actions">
           <button type="submit" class="btn btn-primary btn-flex">Entrar</button>
