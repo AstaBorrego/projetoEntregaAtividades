@@ -24,13 +24,14 @@ body {
   padding: 20px;
 }
 
+/* LARGURA AUMENTADA DA TELA DO ALUNO E PROFESSOR */
 .container {
   background: var(--card-bg);
-  padding: 2rem;
+  padding: 2.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   width: 100%;
-  max-width: 650px;
+  max-width: 1100px; /* Aumentado de 650px para 1100px */
 }
 
 h1, h2 {
@@ -172,6 +173,60 @@ textarea {
   display: block;
 }
 
+/* LISTA DE TRABALHOS ENTREGUES DO ALUNO */
+.lista-trabalhos-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-trabalho {
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--primary);
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.card-trabalho:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-left-color: var(--primary-hover);
+}
+
+.card-trabalho.ativo {
+  background: #e0e7ff;
+  border-color: #818cf8;
+  border-left-color: #4338ca;
+}
+
+.card-trabalho h4 {
+  font-size: 1rem;
+  color: #0f172a;
+  margin-bottom: 0.4rem;
+}
+
+.card-trabalho p {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+}
+
+.card-trabalho .badge-nota {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border-radius: 4px;
+  background: #dbeafe;
+  color: #1e40af;
+  margin-top: 0.4rem;
+}
+
 #printArea {
   margin-top: 2rem;
 }
@@ -209,7 +264,8 @@ textarea {
     margin-bottom: 8px;
   }
 }
-/* Estilos para o Modal de Sucesso */
+
+/* Modal de Sucesso */
 .modal-overlay {
   position: fixed;
   top: 0;

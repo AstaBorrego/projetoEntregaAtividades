@@ -1,75 +1,68 @@
-<!-- Declaração do tipo de documento HTML5 -->
 <!DOCTYPE html>
-<!-- Abertura da tag html informando o idioma português do Brasil -->
 <html lang="pt-BR">
-<!-- Abertura do cabeçalho da página -->
 <head>
-  <!-- Definição da codificação de caracteres UTF-8 -->
   <meta charset="UTF-8">
-  <!-- Configuração de responsividade para dispositivos móveis -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Título que é exibido na aba do navegador -->
   <title>Portal de Entregas Acadêmicas</title>
   
-  <!-- SDK do EmailJS para envio real de e-mails via cliente -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  
-  <!-- Vinculação do arquivo CSS externo para estilização da página -->
+  <link rel="icon" type="image/png" href="logoavancatech.png">
   <link rel="stylesheet" href="style.css">
-<!-- Fechamento do cabeçalho -->
 </head>
-<!-- Abertura do corpo do documento HTML -->
 <body>
 
-  <!-- Container principal que centraliza o conteúdo na tela -->
   <div class="container">
     
-    <!-- TELA INICIAL (LANDING PAGE) -->
+    <!-- TELA INICIAL -->
     <div id="homeScreen" class="screen active">
-      <!-- Título principal do sistema -->
       <h1>Portal de Entregas Acadêmicas</h1>
-      <!-- Subtítulo de instrução para o usuário -->
       <p class="subtitle">Selecione o seu perfil de acesso abaixo:</p>
-      <!-- Grupo de botões para escolha do perfil de acesso -->
       <div class="btn-group-home">
-        <!-- Botão para acessar a tela do aluno chamando a função showScreen -->
         <button class="btn btn-primary" onclick="showScreen('studentScreen')">Sou Aluno</button>
-        <!-- Botão para acessar a tela de login do professor chamando a função showScreen -->
         <button class="btn btn-secondary" onclick="showScreen('loginScreen')">Sou Professor</button>
       </div>
     </div>
 
     <!-- TELA DO ALUNO -->
     <div id="studentScreen" class="screen">
-      <!-- Título da tela do aluno -->
       <h2>Envio de Atividade</h2>
-      <!-- Div reservada para mensagens de erro ou sucesso -->
       <div id="studentMsg" class="message"></div>
-      <!-- Formulário de envio de atividades do aluno sem validação nativa -->
       <form id="studentForm" novalidate>
         
-        <!-- Grupo de formulário para o nome do aluno -->
         <div class="form-group" id="group-nomeAluno">
           <label for="nomeAluno">Nome do Aluno *:</label>
           <input type="text" id="nomeAluno" placeholder="Digite seu nome completo" required>
         </div>
 
-        <!-- Grupo de formulário para o e-mail do aluno -->
         <div class="form-group" id="group-emailAluno">
           <label for="emailAluno">E-mail do Aluno *:</label>
           <input type="email" id="emailAluno" placeholder="aluno@escola.com" required>
         </div>
 
-        <!-- Grupo de formulário para seleção do polo -->
+        <!-- POLOS 1 ATE 7 -->
         <div class="form-group" id="group-polo">
           <label>Selecione o Polo *:</label>
           <div class="radio-group">
+            <label class="radio-label"><input type="radio" name="polo" value="Polo 1" required> Polo 1</label>
+            <label class="radio-label"><input type="radio" name="polo" value="Polo 2" required> Polo 2</label>
+            <label class="radio-label"><input type="radio" name="polo" value="Polo 3" required> Polo 3</label>
+            <label class="radio-label"><input type="radio" name="polo" value="Polo 4" required> Polo 4</label>
             <label class="radio-label"><input type="radio" name="polo" value="Polo 5" required> Polo 5</label>
             <label class="radio-label"><input type="radio" name="polo" value="Polo 6" required> Polo 6</label>
+            <label class="radio-label"><input type="radio" name="polo" value="Polo 7" required> Polo 7</label>
           </div>
         </div>
 
-        <!-- Grupo de formulário para seleção do turno -->
+        <!-- DIAS DE AULA -->
+        <div class="form-group" id="group-diasAula">
+          <label>Dias de Aula *:</label>
+          <div class="radio-group">
+            <label class="radio-label"><input type="radio" name="diasAula" value="Seg. / Qua." required> Seg. / Qua.</label>
+            <label class="radio-label"><input type="radio" name="diasAula" value="Ter. / Qui." required> Ter. / Qui.</label>
+            <label class="radio-label"><input type="radio" name="diasAula" value="Todos os dias" required> Todos os dias</label>
+          </div>
+        </div>
+
         <div class="form-group" id="group-turno">
           <label>Selecione o Turno *:</label>
           <div class="radio-group">
@@ -79,7 +72,6 @@
           </div>
         </div>
 
-        <!-- Grupo de formulário para seleção do módulo -->
         <div class="form-group" id="group-modulo">
           <label>Selecione o Módulo *:</label>
           <div class="radio-group">
@@ -89,7 +81,6 @@
           </div>
         </div>
 
-        <!-- Grupo de formulário para seleção do Tipo de Avaliação -->
         <div class="form-group" id="group-tipoAvaliacao">
           <label>Selecione o Tipo de Avaliação *:</label>
           <div class="radio-group">
@@ -99,31 +90,26 @@
           </div>
         </div>
 
-        <!-- CAMPO OBRIGATÓRIO: Título do Trabalho -->
         <div class="form-group" id="group-tituloTrabalho">
           <label for="tituloTrabalho">Título do Trabalho *:</label>
           <input type="text" id="tituloTrabalho" placeholder="Digite o título do seu trabalho" required>
         </div>
 
-        <!-- Grupo de formulário para a descrição/observação da atividade -->
         <div class="form-group" id="group-descricao">
           <label for="descricao">Observação / Descrição da Atividade *:</label>
           <textarea id="descricao" rows="6" placeholder="Descreva aqui os detalhes da atividade..." required></textarea>
         </div>
 
-        <!-- Grupo de formulário para o link do trabalho -->
         <div class="form-group" id="group-urlTrabalho">
           <label for="urlTrabalho">Link do Trabalho *:</label>
           <input type="url" id="urlTrabalho" placeholder="Insira o link do trabalho" required>
         </div>
 
-        <!-- CAMPO DE UPLOAD DE ARQUIVO LOCAL (OPCIONAL) -->
         <div class="form-group" id="group-arquivoTrabalho">
           <label for="arquivoTrabalho">Enviar Arquivo Local (PDF, ZIP, Imagem, Doc):</label>
           <input type="file" id="arquivoTrabalho">
         </div>
 
-        <!-- Grupo de ações contendo os botões do formulário -->
         <div class="btn-actions">
           <button type="submit" class="btn btn-primary btn-flex">Enviar Atividade</button>
           <button type="button" class="btn btn-outline" onclick="showScreen('homeScreen')">Voltar</button>
@@ -153,12 +139,11 @@
 
     <!-- TELA DE PAINEL DO PROFESSOR -->
     <div id="teacherDashboard" class="screen">
-      <h2>Painel do Professor - Avaliação e Consulta</h2>
+      <h2>Painel do Professor - Avaliação e Edição</h2>
       <div id="teacherMsg" class="message"></div>
 
       <form id="teacherForm">
         
-        <!-- Consulta dos alunos cadastrados -->
         <div class="form-group">
           <label for="selectAluno">Selecione o Aluno (Consulta):</label>
           <select id="selectAluno">
@@ -166,44 +151,61 @@
           </select>
         </div>
 
-        <!-- Campo de e-mail do aluno -->
-        <div class="form-group">
-          <label for="profEmailAluno">E-mail do Aluno:</label>
-          <input type="email" id="profEmailAluno" readonly placeholder="aluno@escola.com">
+        <!-- ÁREA ONDE SURGEM OS TRABALHOS DO ALUNO SELECIONADO -->
+        <div class="form-group" id="areaTrabalhosAluno" style="display: none;">
+          <label>Trabalhos Entregues por este Aluno (Clique para Avaliar):</label>
+          <div id="listaTrabalhosAluno" class="lista-trabalhos-container"></div>
         </div>
 
-        <!-- Polo do Aluno -->
+        <div class="form-group">
+          <label for="profEmailAluno">E-mail do Aluno:</label>
+          <input type="email" id="profEmailAluno" placeholder="aluno@escola.com">
+        </div>
+
+        <!-- POLO PROFESSOR 1 ATE 7 -->
         <div class="form-group">
           <label>Polo do Aluno:</label>
           <div class="radio-group">
-            <label class="radio-label"><input type="radio" name="profPolo" value="Polo 5" disabled> Polo 5</label>
-            <label class="radio-label"><input type="radio" name="profPolo" value="Polo 6" disabled> Polo 6</label>
+            <label class="radio-label"><input type="radio" name="profPolo" value="Polo 1"> Polo 1</label>
+            <label class="radio-label"><input type="radio" name="profPolo" value="Polo 2"> Polo 2</label>
+            <label class="radio-label"><input type="radio" name="profPolo" value="Polo 3"> Polo 3</label>
+            <label class="radio-label"><input type="radio" name="profPolo" value="Polo 4"> Polo 4</label>
+            <label class="radio-label"><input type="radio" name="profPolo" value="Polo 5"> Polo 5</label>
+            <label class="radio-label"><input type="radio" name="profPolo" value="Polo 6"> Polo 6</label>
+            <label class="radio-label"><input type="radio" name="profPolo" value="Polo 7"> Polo 7</label>
           </div>
         </div>
 
-        <!-- Turno do Aluno -->
+        <!-- DIAS DE AULA PROFESSOR -->
+        <div class="form-group">
+          <label>Dias de Aula:</label>
+          <div class="radio-group">
+            <label class="radio-label"><input type="radio" name="profDiasAula" value="Seg. / Qua."> Seg. / Qua.</label>
+            <label class="radio-label"><input type="radio" name="profDiasAula" value="Ter. / Qui."> Ter. / Qui.</label>
+            <label class="radio-label"><input type="radio" name="profDiasAula" value="Todos os dias"> Todos os dias</label>
+          </div>
+        </div>
+
         <div class="form-group">
           <label>Turno do Aluno:</label>
           <div class="radio-group">
-            <label class="radio-label"><input type="radio" name="profTurno" value="Manhã" disabled> Manhã</label>
-            <label class="radio-label"><input type="radio" name="profTurno" value="Tarde" disabled> Tarde</label>
-            <label class="radio-label"><input type="radio" name="profTurno" value="Noite" disabled> Noite</label>
+            <label class="radio-label"><input type="radio" name="profTurno" value="Manhã"> Manhã</label>
+            <label class="radio-label"><input type="radio" name="profTurno" value="Tarde"> Tarde</label>
+            <label class="radio-label"><input type="radio" name="profTurno" value="Noite"> Noite</label>
           </div>
         </div>
 
-        <!-- Módulo do Aluno -->
         <div class="form-group">
           <label>Módulo do Aluno:</label>
           <div class="radio-group">
-            <label class="radio-label"><input type="radio" name="profModulo" value="Módulo 1" disabled> Módulo 1</label>
-            <label class="radio-label"><input type="radio" name="profModulo" value="Módulo 2" disabled> Módulo 2</label>
-            <label class="radio-label"><input type="radio" name="profModulo" value="Módulo 3" disabled> Módulo 3</label>
+            <label class="radio-label"><input type="radio" name="profModulo" value="Módulo 1"> Módulo 1</label>
+            <label class="radio-label"><input type="radio" name="profModulo" value="Módulo 2"> Módulo 2</label>
+            <label class="radio-label"><input type="radio" name="profModulo" value="Módulo 3"> Módulo 3</label>
           </div>
         </div>
 
-        <!-- Tipo de Avaliação (Editável pelo Professor) -->
         <div class="form-group">
-          <label>Tipo de Avaliação (Professor pode alterar):</label>
+          <label>Tipo de Avaliação:</label>
           <div class="radio-group">
             <label class="radio-label"><input type="radio" name="profTipoAvaliacao" value="Atividade"> Atividade</label>
             <label class="radio-label"><input type="radio" name="profTipoAvaliacao" value="Prova"> Prova</label>
@@ -211,28 +213,24 @@
           </div>
         </div>
 
-        <!-- Visualização do Título do Trabalho no Painel -->
         <div class="form-group">
           <label for="profTituloTrabalho">Título do Trabalho:</label>
-          <input type="text" id="profTituloTrabalho" readonly placeholder="Título do trabalho enviado">
+          <input type="text" id="profTituloTrabalho" placeholder="Título do trabalho enviado">
         </div>
 
-        <!-- Descrição da Atividade -->
         <div class="form-group">
           <label for="profDescricao">Observação / Descrição da Atividade:</label>
-          <textarea id="profDescricao" rows="4" readonly></textarea>
+          <textarea id="profDescricao" rows="4" placeholder="Descreva aqui os detalhes da atividade..."></textarea>
         </div>
 
-        <!-- Link do Trabalho -->
         <div class="form-group">
           <label for="profUrlTrabalho">Link do Trabalho:</label>
           <div style="display: flex; gap: 0.5rem;">
-            <input type="url" id="profUrlTrabalho" readonly placeholder="Nenhum link fornecido">
+            <input type="url" id="profUrlTrabalho" placeholder="Nenhum link fornecido">
             <button type="button" id="btnAbrirLink" class="btn btn-secondary">Abrir</button>
           </div>
         </div>
 
-        <!-- EXIBIÇÃO DE ARQUIVO ENVIADO PELO ALUNO -->
         <div class="form-group">
           <label>Arquivo Enviado pelo Aluno:</label>
           <div style="display: flex; gap: 0.5rem; align-items: center;">
@@ -241,21 +239,19 @@
           </div>
         </div>
 
-        <!-- Nota do Aluno -->
+        <!-- NOTA ENTRE 7 E 10 -->
         <div class="form-group">
-          <label for="profNota">Nota do Aluno (Exclusivo para Professor):</label>
-          <input type="number" id="profNota" min="0" max="10" step="0.1" placeholder="Atribua uma nota de 0 a 10">
+          <label for="profNota">Nota do Aluno (Nota mínima 7.0 / máxima 10.0):</label>
+          <input type="number" id="profNota" min="7" max="10" step="0.1" placeholder="Atribua uma nota de 7.0 a 10.0">
         </div>
 
-        <!-- Comentários / Feedback -->
         <div class="form-group">
           <label for="profComentario">Comentários / Feedback para o Aluno:</label>
           <textarea id="profComentario" rows="4" placeholder="Escreva o feedback ou observações sobre o trabalho..."></textarea>
         </div>
 
-        <!-- Botões de Ação do Professor -->
         <div class="btn-actions no-print">
-          <button type="button" id="btnSalvarNota" class="btn btn-primary">Salvar Nota e Enviar E-mail</button>
+          <button type="button" id="btnSalvarNota" class="btn btn-primary">Salvar Alterações e Enviar E-mail</button>
           <button type="button" id="btnImprimirSelecionado" class="btn btn-secondary">Imprimir Aluno Selecionado</button>
         </div>
 
@@ -276,8 +272,13 @@
       <div class="form-group" id="grupoSelectPolo" style="display: none;">
         <label for="selectPoloFiltro">Selecione o Polo:</label>
         <select id="selectPoloFiltro">
+          <option value="Polo 1">Polo 1</option>
+          <option value="Polo 2">Polo 2</option>
+          <option value="Polo 3">Polo 3</option>
+          <option value="Polo 4">Polo 4</option>
           <option value="Polo 5">Polo 5</option>
           <option value="Polo 6">Polo 6</option>
+          <option value="Polo 7">Polo 7</option>
         </select>
       </div>
 
@@ -291,7 +292,6 @@
 
   </div>
 
-  <!-- MODAL DE AGRADECIMENTO E INCENTIVO AO ALUNO -->
   <div id="modalSucesso" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-icon">🎉</div>
