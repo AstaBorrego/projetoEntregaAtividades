@@ -139,7 +139,7 @@
 
     <!-- TELA DE PAINEL DO PROFESSOR -->
     <div id="teacherDashboard" class="screen">
-      <h2>Painel do Professor - Avaliação e Edição</h2>
+      <h2>Painel do Professor</h2>
       <div id="teacherMsg" class="message"></div>
 
       <form id="teacherForm">
@@ -237,6 +237,15 @@
             <input type="text" id="profNomeArquivo" readonly placeholder="Nenhum arquivo anexado">
             <button type="button" id="btnBaixarArquivo" class="btn btn-secondary" style="display: none;">Baixar / Abrir</button>
           </div>
+        </div>
+
+        <!-- BOTÃO DE INTEGRAÇÃO COM IA -->
+        <div class="form-group" style="background: #e0e7ff; padding: 15px; border-radius: 8px; border: 1px dashed #4338ca;">
+          <label style="color: #312e81; margin-bottom: 8px;">Assistente de Correção Inteligente (IA)</label>
+          <button type="button" id="btnCorrigirIA" class="btn btn-primary" style="background: #4338ca; width: 100%;">
+            🤖 Avaliar e Sugerir Nota com IA (Gemini)
+          </button>
+          <small id="iaStatus" style="display: block; margin-top: 6px; color: #3730a3;"></small>
         </div>
 
         <!-- NOTA ENTRE 7 E 10 -->

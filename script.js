@@ -1,8 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
+import { GoogleGenAI } from "https://esm.run/@google/genai";
 
 (function() {
   emailjs.init("Q8SiVr5mU4QBiKIK8");
@@ -251,6 +252,7 @@ function limparFormularioProfessor() {
   document.getElementById('btnBaixarArquivo').style.display = 'none';
   document.getElementById('profNota').value = '';
   document.getElementById('profComentario').value = '';
+  document.getElementById('iaStatus').innerText = '';
 }
 
 function handleTeacherStudentSelectionChange(e) {
@@ -265,7 +267,6 @@ function loadActivityIntoTeacherForm(alunoObj) {
   
   document.getElementById('profEmailAluno').value = alunoObj.emailAluno || '';
   
-  // Marcar radios correspondentes
   const marcarRadio = (nomeInput, valor) => {
     if (!valor) return;
     document.querySelectorAll(`input[name="${nomeInput}"]`).forEach(el => {
@@ -302,9 +303,75 @@ function loadActivityIntoTeacherForm(alunoObj) {
 
   document.getElementById('profNota').value = alunoObj.nota || '';
   document.getElementById('profComentario').value = alunoObj.comentario || '';
+  document.getElementById('iaStatus').innerText = '';
 }
 
-// --- Salvar Nota / Feedback e Enviar E-mail ---
+// --- INTEGRAÇÃO COM IA (GOOGLE GEMINI) PARA CORREÇÃO ---
+document.getElementById('btnCorrigirIA').addEventListener('click', async () => {
+  const statusEl = document.getElementById('iaStatus');
+  if (!idAtividadeAtiva) {
+    alert("Selecione um trabalho primeiro.");
+    return;
+  }
+
+  const alunoObj = listaAtividades.find(a => a.id === idAtividadeAtiva);
+  if (!alunoObj) return;
+
+  try {
+    statusEl.style.color = '#3730a3';
+    statusEl.innerText = "🤖 A Inteligência Artificial está analisando o trabalho...";
+
+    // Instancia o cliente da IA (substitua a chave se necessário ou utilize a variável de ambiente)
+    const ai = new GoogleGenAI({ apiKey: "AQ.Ab8RN6JhsgnZD3zEZ4XSuTYOsYNRCtFxE0KMFCFNULffjWScRQ" });
+
+    const promptText = `
+      Você é um professor sênior especialista em tecnologia e avaliação acadêmica.
+      Por favor, analise a seguinte entrega acadêmica de um aluno e forneça uma nota de 7.0 a 10.0 e um feedback construtivo detalhado.
+      
+      Tipo de Avaliação: ${alunoObj.tipoAvaliacao || 'Atividade'}
+      Título: ${alunoObj.tituloTrabalho || 'N/A'}
+      Descrição/Observação enviada pelo aluno: ${alunoObj.descricao || 'N/A'}
+      Link enviado: ${alunoObj.urlTrabalho || 'N/A'}
+      Arquivo anexado: ${alunoObj.nomeArquivoOriginal || 'Nenhum'}
+
+      Responda estritamente no seguinte formato JSON puro (sem markdown extra, apenas o objeto):
+      {
+        "nota": 9.5,
+        "comentario": "Seu feedback detalhado e construtivo aqui..."
+      }
+    `;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: promptText,
+    });
+
+    const textResult = response.text.trim();
+    // Limpeza de possíveis marcações de bloco de código do markdown
+    const jsonClean = textResult.replace(/```json/g, '').replace(/```/g, '').trim();
+    const dadosIA = JSON.parse(jsonClean);
+
+    if (dadosIA.nota && dadosIA.comentario) {
+      // Garante que a nota esteja dentro do intervalo permitido 7.0 e 10.0
+      let notaFinal = parseFloat(dadosIA.nota);
+      if (notaFinal < 7) notaFinal = 7.0;
+      if (notaFinal > 10) notaFinal = 10.0;
+
+      document.getElementById('profNota').value = notaFinal.toFixed(1);
+      document.getElementById('profComentario').value = dadosIA.comentario;
+
+      statusEl.style.color = '#166534';
+      statusEl.innerText = "✅ Correção e sugestão geradas com sucesso pela IA!";
+    } else {
+      throw new Error("Formato de resposta da IA inválido.");
+    }
+
+  } catch (error) {
+    statusEl.style.color = '#991b1b';
+    statusEl.innerText = "❌ Erro ao processar com IA: " + error.message;
+  }
+});
+
 // --- Salvar Nota / Feedback e Enviar E-mail ---
 document.getElementById('btnSalvarNota').addEventListener('click', async () => {
   const msgDiv = document.getElementById('teacherMsg');
@@ -332,53 +399,43 @@ document.getElementById('btnSalvarNota').addEventListener('click', async () => {
       comentario: comentario
     });
 
-    // Atualiza localmente no array
     const index = listaAtividades.findIndex(a => a.id === idAtividadeAtiva);
     if (index !== -1) {
       listaAtividades[index].nota = notaInput;
       listaAtividades[index].comentario = comentario;
     }
 
-    // Busca o objeto do aluno com segurança a partir da lista carregada
     const alunoAtual = listaAtividades.find(a => a.id === idAtividadeAtiva);
     if (!alunoAtual || !alunoAtual.emailAluno) {
       throw new Error("Não foi possível localizar os dados do aluno para o envio do e-mail.");
     }
 
-    console.log("Verificando destinatário:", alunoAtual.emailAluno);
-
-    // Parâmetros ajustados exatamente para o template do EmailJS
-    // Parâmetros ajustados para preencher o destinatário e o template corretamente
     const templateParams = {
       to_email: alunoAtual.emailAluno,
-      email: alunoAtual.emailAluno, // Garante que o EmailJS reconheça o destinatário
+      email: alunoAtual.emailAluno,
       name: alunoAtual.nomeAluno || "Aluno",
       title: `${alunoAtual.tituloTrabalho || "Atividade"} - Nota: ${notaInput} | Feedback: ${comentario || "Sem comentários adicionais."}`
     };
-    console.log("Parâmetros de envio:", templateParams);
     
     await emailjs.send('service_2m6uvjh', 'template_ec028xn', templateParams);
 
     msgDiv.className = "message success";
     msgDiv.innerText = "Nota salva e e-mail enviado com sucesso!";
     
-    // Atualiza o card visualmente
     const cardAtivoEncontrado = document.querySelector(`.card-trabalho[data-id="${idAtividadeAtiva}"]`);
     if (cardAtivoEncontrado) {
       const badge = cardAtivoEncontrado.querySelector('.badge-nota');
       if (badge) badge.innerText = `Nota: ${notaInput}`;
     }
-// 2. Limpar os campos do formulário
+
     document.getElementById('profNota').value = "";
     document.getElementById('profComentario').value = "";
     
-    // 3. Posicionar o ponteiro/rolagem no início da tela
     window.scrollTo({
       top: 0,
-      behavior: 'smooth' // Faz a rolagem ser suave
+      behavior: 'smooth'
     });
 
-    // Opcional: Remover a mensagem após 5 segundos para não ficar poluindo a tela
     setTimeout(() => {
       msgDiv.innerText = "";
       msgDiv.className = "";
@@ -445,7 +502,6 @@ async function handlePrintGeneralReport() {
     querySnapshot.forEach((docSnap) => {
       const data = docSnap.data();
 
-      // Aplicar filtros localmente
       if (polosSelecionados.length > 0 && !polosSelecionados.includes(data.polo)) return;
       if (moduloSelecionado && data.modulo !== moduloSelecionado) return;
       if (tipoSelecionado && data.tipoAvaliacao !== tipoSelecionado) return;
@@ -478,7 +534,6 @@ async function handlePrintGeneralReport() {
   }
 }
 
-// Event Listeners Principais
 document.getElementById('selectAluno').addEventListener('change', handleTeacherStudentSelectionChange);
 document.getElementById('btnImprimirSelecionado').addEventListener('click', handlePrintSelectedActivity);
 document.getElementById('btnImprimirGeral').addEventListener('click', handlePrintGeneralReport);
