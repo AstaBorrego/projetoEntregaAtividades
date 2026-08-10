@@ -1,3 +1,4 @@
+/* Existing styles */
 :root {
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
@@ -11,6 +12,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  color: var(--text);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -24,14 +26,13 @@ body {
   padding: 20px;
 }
 
-/* LARGURA AUMENTADA DA TELA DO ALUNO E PROFESSOR */
 .container {
   background: var(--card-bg);
   padding: 2.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   width: 100%;
-  max-width: 1100px; /* Aumentado de 650px para 1100px */
+  max-width: 1100px;
 }
 
 h1, h2 {
@@ -173,7 +174,6 @@ textarea {
   display: block;
 }
 
-/* LISTA DE TRABALHOS ENTREGUES DO ALUNO */
 .lista-trabalhos-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -231,6 +231,11 @@ textarea {
   margin-top: 2rem;
 }
 
+/* Print Signature Styling */
+.print-signature {
+    display: none;
+}
+
 @media print {
   body * {
     visibility: hidden;
@@ -257,15 +262,29 @@ textarea {
     padding: 20px;
     border: 1px solid #ccc;
     margin-bottom: 0;
+    position: relative; /* para posicionar assinatura */
+    min-height: 90vh; /* garante altura para rodapé */
   }
 
   .print-page p {
     font-size: 12pt;
     margin-bottom: 8px;
   }
+
+  .print-signature {
+      display: block;
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      text-align: center;
+  }
+  
+  .print-signature img {
+      width: 300px;
+  }
 }
 
-/* Modal de Sucesso */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -320,3 +339,5 @@ textarea {
   margin: 1.2rem 0 1.8rem 0;
   line-height: 1.6;
 }
+style.css
+Exibindo style.css.

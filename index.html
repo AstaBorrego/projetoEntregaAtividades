@@ -97,7 +97,7 @@
 
         <div class="form-group" id="group-descricao">
           <label for="descricao">Observação / Descrição da Atividade *:</label>
-          <textarea id="descricao" rows="6" placeholder="Descreva aqui os detalhes da atividade..." required></textarea>
+          <textarea id="descricao" rows="6" placeholder="Descreva aqui os detalhes da atividade (mínimo 20 caracteres)..." required minlength="20"></textarea>
         </div>
 
         <div class="form-group" id="group-urlTrabalho">
@@ -259,26 +259,39 @@
 
       <hr style="margin: 2rem 0;">
 
-      <p class="subtitle">Ou selecione opções para gerar relatório de impressão geral (1 página por aluno):</p>
+      <h3 style="text-align: center; margin-bottom: 1.5rem;">Gerar Relatório de Impressão Geral</h3>
+      <p class="subtitle">Selecione um ou mais filtros para gerar o relatório (1 página por aluno):</p>
       
       <div class="form-group">
-        <label for="tipoImpressao">Tipo de Impressão Geral:</label>
-        <select id="tipoImpressao">
-          <option value="todos">Todas as Atividades (Por Aluno)</option>
-          <option value="polo">Filtrar por Polo</option>
+        <label>Filtrar por Polo:</label>
+        <div class="radio-group" id="filtroPoloContainer">
+          <label class="radio-label"><input type="checkbox" name="filtroPolo" value="Polo 1"> Polo 1</label>
+          <label class="radio-label"><input type="checkbox" name="filtroPolo" value="Polo 2"> Polo 2</label>
+          <label class="radio-label"><input type="checkbox" name="filtroPolo" value="Polo 3"> Polo 3</label>
+          <label class="radio-label"><input type="checkbox" name="filtroPolo" value="Polo 4"> Polo 4</label>
+          <label class="radio-label"><input type="checkbox" name="filtroPolo" value="Polo 5"> Polo 5</label>
+          <label class="radio-label"><input type="checkbox" name="filtroPolo" value="Polo 6"> Polo 6</label>
+          <label class="radio-label"><input type="checkbox" name="filtroPolo" value="Polo 7"> Polo 7</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="filtroModulo">Filtrar por Módulo:</label>
+        <select id="filtroModulo">
+          <option value="">-- Todos --</option>
+          <option value="Módulo 1">Módulo 1</option>
+          <option value="Módulo 2">Módulo 2</option>
+          <option value="Módulo 3">Módulo 3</option>
         </select>
       </div>
 
-      <div class="form-group" id="grupoSelectPolo" style="display: none;">
-        <label for="selectPoloFiltro">Selecione o Polo:</label>
-        <select id="selectPoloFiltro">
-          <option value="Polo 1">Polo 1</option>
-          <option value="Polo 2">Polo 2</option>
-          <option value="Polo 3">Polo 3</option>
-          <option value="Polo 4">Polo 4</option>
-          <option value="Polo 5">Polo 5</option>
-          <option value="Polo 6">Polo 6</option>
-          <option value="Polo 7">Polo 7</option>
+      <div class="form-group">
+        <label for="filtroTipo">Filtrar por Tarefa:</label>
+        <select id="filtroTipo">
+          <option value="">-- Todas --</option>
+          <option value="Atividade">Atividade</option>
+          <option value="Prova">Prova</option>
+          <option value="TCC">TCC</option>
         </select>
       </div>
 

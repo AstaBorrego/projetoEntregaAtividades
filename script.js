@@ -27,10 +27,12 @@ const storage = getStorage(app);
 let listaAtividades = [];
 let idAtividadeAtiva = null;
 
+// --- Constantes e Utilitários Globais ---
 const frasesIncentivo = [
   "Parabéns, {NOME}! Seu empenho e dedicação são o caminho para o seu sucesso profissional. Continue assim!",
   "Excelente trabalho, {NOME}! Cada atividade entregue é um passo importante rumo ao seu grande futuro.",
   "Muito obrigado pela entrega, {NOME}! Seu compromisso com os estudos é admirável e faz toda a diferença.",
+  "Atividade recebida com sucesso, {NOME}! Seu futuro é brilhante, e cada passo conta. Avance sempre!",
   "Atividade recebida com sucesso, {NOME}! Continue acreditando no seu potencial e superando desafios!",
   "Parabéns pelo empenho, {NOME}! O conhecimento que você está construindo hoje abrirá portas incríveis amanhã."
 ];
@@ -50,7 +52,7 @@ window.fecharModalSucesso = function() {
   modal.classList.remove('active');
 };
 
-// Envio do formulário do Aluno
+// --- Funções do Aluno ---
 document.getElementById('studentForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const msgDiv = document.getElementById('studentMsg');
@@ -74,12 +76,11 @@ document.getElementById('studentForm').addEventListener('submit', async (e) => {
   let urlTrabalho = urlInput.value.trim();
   const arquivo = fileInput.files[0];
 
-  // Adiciona protocolo se o aluno digitou o link sem http/https
   if (urlTrabalho && !/^https?:\/\//i.test(urlTrabalho)) {
     urlTrabalho = 'https://' + urlTrabalho;
   }
 
-  const camposValidacao = [
+  const validationFields = [
     { valor: nomeAluno, elem: nomeInput, grupoId: 'group-nomeAluno', msg: 'Por favor, preencha o Nome do Aluno.' },
     { valor: emailAluno, elem: emailInput, grupoId: 'group-emailAluno', msg: 'Por favor, informe o seu E-mail.' },
     { valor: polo, elem: null, grupoId: 'group-polo', msg: 'Por favor, selecione um Polo.' },
@@ -88,23 +89,17 @@ document.getElementById('studentForm').addEventListener('submit', async (e) => {
     { valor: modulo, elem: null, grupoId: 'group-modulo', msg: 'Por favor, selecione um Módulo.' },
     { valor: tipoAvaliacao, elem: null, grupoId: 'group-tipoAvaliacao', msg: 'Por favor, selecione o Tipo de Avaliação.' },
     { valor: tituloTrabalho, elem: tituloInput, grupoId: 'group-tituloTrabalho', msg: 'Por favor, preencha o Título do Trabalho.' },
-    { valor: descricao, elem: descricaoInput, grupoId: 'group-descricao', msg: 'Por favor, insira a Observação / Descrição da Atividade.' },
+    { valor: descricao && descricao.length >= 20, elem: descricaoInput, grupoId: 'group-descricao', msg: 'A descrição deve ter no mínimo 20 caracteres.' },
     { valor: urlTrabalho, elem: urlInput, grupoId: 'group-urlTrabalho', msg: 'Por favor, insira o Link do Trabalho.' }
   ];
 
-  for (const item of camposValidacao) {
+  for (const item of validationFields) {
     if (!item.valor) {
       msgDiv.className = "message error";
       msgDiv.innerText = item.msg;
-
       const alvoGrupo = document.getElementById(item.grupoId);
-      if (alvoGrupo) {
-        alvoGrupo.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-
-      if (item.elem) {
-        item.elem.focus();
-      }
+      if (alvoGrupo) alvoGrupo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (item.elem) item.elem.focus();
       return;
     }
   }
@@ -112,7 +107,6 @@ document.getElementById('studentForm').addEventListener('submit', async (e) => {
   try {
     msgDiv.className = "message success";
     msgDiv.innerText = "Enviando atividade...";
-
     let arquivoUrl = "";
     let nomeArquivoOriginal = "";
 
@@ -145,10 +139,8 @@ document.getElementById('studentForm').addEventListener('submit', async (e) => {
     msgDiv.className = "message";
     msgDiv.innerText = "";
     document.getElementById('studentForm').reset();
-
     const fraseSorteada = frasesIncentivo[Math.floor(Math.random() * frasesIncentivo.length)];
     const mensagemFinal = fraseSorteada.replace("{NOME}", nomeAluno);
-
     document.getElementById('modalMensagemIncentivo').innerText = mensagemFinal;
     document.getElementById('modalSucesso').classList.add('active');
 
@@ -158,18 +150,12 @@ document.getElementById('studentForm').addEventListener('submit', async (e) => {
   }
 });
 
-// Login do Professor
+// --- Login do Professor ---
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const msgDiv = document.getElementById('loginMsg');
   const email = document.getElementById('profEmail').value.trim();
   const password = document.getElementById('profPassword').value.trim();
-
-  if (!email || !password) {
-    msgDiv.className = "message error";
-    msgDiv.innerText = "Todos os campos devem ser preenchidos";
-    return;
-  }
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
@@ -181,30 +167,22 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   }
 });
 
-// Carregar lista de alunos no Select de forma única (Sem duplicados)
 async function carregarAlunosProfessor() {
   const selectAluno = document.getElementById('selectAluno');
   selectAluno.innerHTML = '<option value="">-- Selecione um Aluno --</option>';
-
   try {
     const querySnapshot = await getDocs(collection(db, "atividade"));
     listaAtividades = [];
-
     querySnapshot.forEach((docSnap) => {
       const data = docSnap.data();
       listaAtividades.push({ id: docSnap.id, ...data });
     });
-
     const alunosMap = new Map();
     listaAtividades.forEach(item => {
       const chave = (item.emailAluno || item.nomeAluno || '').toLowerCase().trim();
-      if (chave && !alunosMap.has(chave)) {
-        alunosMap.set(chave, item.nomeAluno || 'Aluno sem nome');
-      }
+      if (chave && !alunosMap.has(chave)) alunosMap.set(chave, item.nomeAluno || 'Aluno sem nome');
     });
-
     const alunosOrdenados = Array.from(alunosMap.entries()).sort((a, b) => a[1].localeCompare(b[1]));
-
     alunosOrdenados.forEach(([chave, nome]) => {
       const opt = document.createElement('option');
       opt.value = chave;
@@ -216,82 +194,102 @@ async function carregarAlunosProfessor() {
   }
 }
 
-// Ao selecionar o Aluno: Mostra todos os trabalhos dele em cards
-document.getElementById('selectAluno').addEventListener('change', (e) => {
-  const chaveSelecionada = e.target.value;
+function renderStudentActivities(chaveSelecionada) {
   const areaTrabalhos = document.getElementById('areaTrabalhosAluno');
   const listaContainer = document.getElementById('listaTrabalhosAluno');
-
   limparFormularioProfessor();
-
+  
   if (!chaveSelecionada) {
     areaTrabalhos.style.display = 'none';
     listaContainer.innerHTML = '';
     return;
   }
-
-  const trabalhosDoAluno = listaAtividades.filter(a => 
-    (a.emailAluno || a.nomeAluno || '').toLowerCase().trim() === chaveSelecionada
-  );
-
+  
+  const trabalhosDoAluno = listaAtividades.filter(a => (a.emailAluno || a.nomeAluno || '').toLowerCase().trim() === chaveSelecionada);
   if (trabalhosDoAluno.length === 0) {
     areaTrabalhos.style.display = 'none';
     listaContainer.innerHTML = '';
     return;
   }
-
+  
   areaTrabalhos.style.display = 'block';
   listaContainer.innerHTML = '';
-
+  
   trabalhosDoAluno.forEach((trabalho) => {
     const card = document.createElement('div');
     card.className = 'card-trabalho';
     card.dataset.id = trabalho.id;
-
-    const statusNota = trabalho.nota ? `Nota: ${trabalho.nota}` : 'Pendente de avaliação';
-
     card.innerHTML = `
       <h4>${trabalho.tituloTrabalho || 'Sem título'}</h4>
       <p><strong>Módulo:</strong> ${trabalho.modulo || '-'} | <strong>Tipo:</strong> ${trabalho.tipoAvaliacao || 'Atividade'}</p>
-      <span class="badge-nota">${statusNota}</span>
+      <span class="badge-nota">${trabalho.nota ? `Nota: ${trabalho.nota}` : 'Pendente'}</span>
     `;
-
     card.addEventListener('click', () => {
       document.querySelectorAll('.card-trabalho').forEach(c => c.classList.remove('ativo'));
       card.classList.add('ativo');
-      carregarAtividadeFormulario(trabalho);
+      loadActivityIntoTeacherForm(trabalho);
     });
-
     listaContainer.appendChild(card);
   });
-
+  
   const primeiroCard = listaContainer.querySelector('.card-trabalho');
-  if (primeiroCard) {
-    primeiroCard.click();
-  }
-});
+  if (primeiroCard) primeiroCard.click();
+}
 
-// Preenche os campos do formulário ao clicar em um trabalho
-async function carregarAtividadeFormulario(alunoObj) {
+function limparFormularioProfessor() {
+  idAtividadeAtiva = null;
+  document.getElementById('profEmailAluno').value = '';
+  document.querySelectorAll('input[name="profPolo"]').forEach(el => el.checked = false);
+  document.querySelectorAll('input[name="profDiasAula"]').forEach(el => el.checked = false);
+  document.querySelectorAll('input[name="profTurno"]').forEach(el => el.checked = false);
+  document.querySelectorAll('input[name="profModulo"]').forEach(el => el.checked = false);
+  document.querySelectorAll('input[name="profTipoAvaliacao"]').forEach(el => el.checked = false);
+  document.getElementById('profTituloTrabalho').value = '';
+  document.getElementById('profDescricao').value = '';
+  document.getElementById('profUrlTrabalho').value = '';
+  document.getElementById('profNomeArquivo').value = '';
+  document.getElementById('btnBaixarArquivo').style.display = 'none';
+  document.getElementById('profNota').value = '';
+  document.getElementById('profComentario').value = '';
+}
+
+function handleTeacherStudentSelectionChange(e) {
+  const chaveSelecionada = e.target.value;
+  renderStudentActivities(chaveSelecionada);
+}
+
+function loadActivityIntoTeacherForm(alunoObj) {
   idAtividadeAtiva = alunoObj.id;
-
   const btnBaixarArquivo = document.getElementById('btnBaixarArquivo');
   const profNomeArquivo = document.getElementById('profNomeArquivo');
-
+  
   document.getElementById('profEmailAluno').value = alunoObj.emailAluno || '';
-  document.querySelectorAll('input[name="profPolo"]').forEach(r => r.checked = (r.value === alunoObj.polo));
-  document.querySelectorAll('input[name="profDiasAula"]').forEach(r => r.checked = (r.value === alunoObj.diasAula));
-  document.querySelectorAll('input[name="profTurno"]').forEach(r => r.checked = (r.value === alunoObj.turno));
-  document.querySelectorAll('input[name="profModulo"]').forEach(r => r.checked = (r.value === alunoObj.modulo));
+  
+  // Marcar radios correspondentes
+  const marcarRadio = (nomeInput, valor) => {
+    if (!valor) return;
+    document.querySelectorAll(`input[name="${nomeInput}"]`).forEach(el => {
+      el.checked = (el.value === valor);
+    });
+  };
 
-  const tipo = alunoObj.tipoAvaliacao || 'Atividade';
-  document.querySelectorAll('input[name="profTipoAvaliacao"]').forEach(r => r.checked = (r.value === tipo));
+  marcarRadio('profPolo', alunoObj.polo);
+  marcarRadio('profDiasAula', alunoObj.diasAula);
+  marcarRadio('profTurno', alunoObj.turno);
+  marcarRadio('profModulo', alunoObj.modulo);
+  marcarRadio('profTipoAvaliacao', alunoObj.tipoAvaliacao);
 
   document.getElementById('profTituloTrabalho').value = alunoObj.tituloTrabalho || '';
   document.getElementById('profDescricao').value = alunoObj.descricao || '';
-  document.getElementById('profUrlTrabalho').value = alunoObj.urlTrabalho || '';
-  document.getElementById('profNota').value = alunoObj.nota !== undefined ? alunoObj.nota : '';
-  document.getElementById('profComentario').value = alunoObj.comentario !== undefined ? alunoObj.comentario : '';
+  
+  const urlInput = document.getElementById('profUrlTrabalho');
+  urlInput.value = alunoObj.urlTrabalho || '';
+  
+  const btnAbrirLink = document.getElementById('btnAbrirLink');
+  btnAbrirLink.onclick = () => {
+    if (alunoObj.urlTrabalho) window.open(alunoObj.urlTrabalho, '_blank');
+    else alert('Nenhum link cadastrado para este trabalho.');
+  };
 
   if (alunoObj.arquivoUrl) {
     profNomeArquivo.value = alunoObj.nomeArquivoOriginal || "Arquivo anexado";
@@ -300,344 +298,187 @@ async function carregarAtividadeFormulario(alunoObj) {
   } else {
     profNomeArquivo.value = "Nenhum arquivo anexado";
     btnBaixarArquivo.style.display = 'none';
-    btnBaixarArquivo.onclick = null;
   }
 
-  // Executa a IA para inspecionar e atribuir a nota de forma silenciosa
-  await window.analisarTrabalhoEAtribuirNotaIA();
+  document.getElementById('profNota').value = alunoObj.nota || '';
+  document.getElementById('profComentario').value = alunoObj.comentario || '';
 }
 
-function limparFormularioProfessor() {
-  idAtividadeAtiva = null;
-  document.getElementById('profEmailAluno').value = '';
-  document.querySelectorAll('input[name="profPolo"]').forEach(r => r.checked = false);
-  document.querySelectorAll('input[name="profDiasAula"]').forEach(r => r.checked = false);
-  document.querySelectorAll('input[name="profTurno"]').forEach(r => r.checked = false);
-  document.querySelectorAll('input[name="profModulo"]').forEach(r => r.checked = false);
-  document.querySelectorAll('input[name="profTipoAvaliacao"]').forEach(r => r.checked = false);
-  document.getElementById('profTituloTrabalho').value = '';
-  document.getElementById('profDescricao').value = '';
-  document.getElementById('profUrlTrabalho').value = '';
-  document.getElementById('profNota').value = '';
-  document.getElementById('profComentario').value = '';
-  
-  const profNomeArquivo = document.getElementById('profNomeArquivo');
-  const btnBaixarArquivo = document.getElementById('btnBaixarArquivo');
-  profNomeArquivo.value = '';
-  btnBaixarArquivo.style.display = 'none';
-  btnBaixarArquivo.onclick = null;
-}
-
-// Abrir Link manualmente com tratamento do protocolo HTTP/HTTPS
-document.getElementById('btnAbrirLink').addEventListener('click', () => {
-  let url = document.getElementById('profUrlTrabalho').value.trim();
-  if (url) {
-    if (!/^https?:\/\//i.test(url)) {
-      url = 'https://' + url;
-    }
-    window.open(url, '_blank');
-  } else {
-    alert("Nenhum link disponível.");
-  }
-});
-
-// Salvar alterações da nota, enviar e-mail, limpar campos e posicionar no topo
+// --- Salvar Nota / Feedback e Enviar E-mail ---
+// --- Salvar Nota / Feedback e Enviar E-mail ---
 document.getElementById('btnSalvarNota').addEventListener('click', async () => {
-  const teacherMsg = document.getElementById('teacherMsg');
-
+  const msgDiv = document.getElementById('teacherMsg');
   if (!idAtividadeAtiva) {
-    teacherMsg.className = "message error";
-    teacherMsg.innerText = "Por favor, selecione um trabalho para salvar as alterações.";
+    alert("Selecione um trabalho na lista para salvar a avaliação.");
     return;
   }
 
-  const emailAluno = document.getElementById('profEmailAluno').value.trim();
-  const polo = document.querySelector('input[name="profPolo"]:checked')?.value || '';
-  const diasAula = document.querySelector('input[name="profDiasAula"]:checked')?.value || '';
-  const turno = document.querySelector('input[name="profTurno"]:checked')?.value || '';
-  const modulo = document.querySelector('input[name="profModulo"]:checked')?.value || '';
-  const tipoAvaliacao = document.querySelector('input[name="profTipoAvaliacao"]:checked')?.value || 'Atividade';
-  const tituloTrabalho = document.getElementById('profTituloTrabalho').value.trim();
-  const descricao = document.getElementById('profDescricao').value.trim();
-  const urlTrabalho = document.getElementById('profUrlTrabalho').value.trim();
-  const nota = document.getElementById('profNota').value;
-  const comentario = document.getElementById('profComentario').value;
+  const notaInput = document.getElementById('profNota').value.trim();
+  const comentario = document.getElementById('profComentario').value.trim();
+  const notaNum = parseFloat(notaInput);
+
+  if (isNaN(notaNum) || notaNum < 7 || notaNum > 10) {
+    alert("A nota deve estar entre 7.0 e 10.0.");
+    return;
+  }
 
   try {
-    const docRef = doc(db, "atividade", idAtividadeAtiva);
-    
-    await updateDoc(docRef, { 
-      emailAluno,
-      polo,
-      diasAula,
-      turno,
-      modulo,
-      tipoAvaliacao,
-      tituloTrabalho,
-      descricao,
-      urlTrabalho,
-      nota,
-      comentario
+    msgDiv.className = "message success";
+    msgDiv.innerText = "Salvando alterações e enviando e-mail...";
+
+    const atividadeRef = doc(db, "atividade", idAtividadeAtiva);
+    await updateDoc(atividadeRef, {
+      nota: notaInput,
+      comentario: comentario
     });
 
-    const trabalhoLocal = listaAtividades.find(a => a.id === idAtividadeAtiva);
-    if (trabalhoLocal) {
-      trabalhoLocal.emailAluno = emailAluno;
-      trabalhoLocal.polo = polo;
-      trabalhoLocal.diasAula = diasAula;
-      trabalhoLocal.turno = turno;
-      trabalhoLocal.modulo = modulo;
-      trabalhoLocal.tipoAvaliacao = tipoAvaliacao;
-      trabalhoLocal.tituloTrabalho = tituloTrabalho;
-      trabalhoLocal.descricao = descricao;
-      trabalhoLocal.urlTrabalho = urlTrabalho;
-      trabalhoLocal.nota = nota;
-      trabalhoLocal.comentario = comentario;
+    // Atualiza localmente no array
+    const index = listaAtividades.findIndex(a => a.id === idAtividadeAtiva);
+    if (index !== -1) {
+      listaAtividades[index].nota = notaInput;
+      listaAtividades[index].comentario = comentario;
     }
 
-    if (emailAluno) {
-      emailjs.init("Q8SiVr5mU4QBiKIK8");
-
-      const templateParams = {
-        to_email: emailAluno,
-        name: trabalhoLocal?.nomeAluno || '',
-        title: tituloTrabalho || 'Avaliação de Atividade',
-        modulo: modulo || '',
-        nota: nota,
-        comentario: comentario || 'Sem comentários adicionais.'
-      };
-
-      await emailjs.send('service_2m6uvjh', 'template_bgkfhap', templateParams);
+    // Busca o objeto do aluno com segurança a partir da lista carregada
+    const alunoAtual = listaAtividades.find(a => a.id === idAtividadeAtiva);
+    if (!alunoAtual || !alunoAtual.emailAluno) {
+      throw new Error("Não foi possível localizar os dados do aluno para o envio do e-mail.");
     }
 
-    // 1. Limpa o formulário e reseta a lista de seleção
-    limparFormularioProfessor();
-    const selectAluno = document.getElementById('selectAluno');
-    selectAluno.value = "";
+    console.log("Verificando destinatário:", alunoAtual.emailAluno);
+
+    // Parâmetros ajustados exatamente para o template do EmailJS
+    // Parâmetros ajustados para preencher o destinatário e o template corretamente
+    const templateParams = {
+      to_email: alunoAtual.emailAluno,
+      email: alunoAtual.emailAluno, // Garante que o EmailJS reconheça o destinatário
+      name: alunoAtual.nomeAluno || "Aluno",
+      title: `${alunoAtual.tituloTrabalho || "Atividade"} - Nota: ${notaInput} | Feedback: ${comentario || "Sem comentários adicionais."}`
+    };
+    console.log("Parâmetros de envio:", templateParams);
     
-    const areaTrabalhos = document.getElementById('areaTrabalhosAluno');
-    const listaContainer = document.getElementById('listaTrabalhosAluno');
-    areaTrabalhos.style.display = 'none';
-    listaContainer.innerHTML = '';
+    await emailjs.send('service_2m6uvjh', 'template_ec028xn', templateParams);
 
-    // 2. Exibe mensagem de sucesso
-    teacherMsg.className = "message success";
-    teacherMsg.innerText = "Alterações salvas e e-mail enviado com sucesso!";
+    msgDiv.className = "message success";
+    msgDiv.innerText = "Nota salva e e-mail enviado com sucesso!";
+    
+    // Atualiza o card visualmente
+    const cardAtivoEncontrado = document.querySelector(`.card-trabalho[data-id="${idAtividadeAtiva}"]`);
+    if (cardAtivoEncontrado) {
+      const badge = cardAtivoEncontrado.querySelector('.badge-nota');
+      if (badge) badge.innerText = `Nota: ${notaInput}`;
+    }
+// 2. Limpar os campos do formulário
+    document.getElementById('profNota').value = "";
+    document.getElementById('profComentario').value = "";
+    
+    // 3. Posicionar o ponteiro/rolagem no início da tela
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Faz a rolagem ser suave
+    });
 
-    // 3. Posiciona a tela no topo para escolha de outro aluno
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    selectAluno.focus();
-
+    // Opcional: Remover a mensagem após 5 segundos para não ficar poluindo a tela
+    setTimeout(() => {
+      msgDiv.innerText = "";
+      msgDiv.className = "";
+    }, 5000);
   } catch (error) {
-    console.error("Erro no salvamento:", error);
-    const errorMsg = error.text || error.message || "Erro de conexão/parâmetros";
-    teacherMsg.className = "message error";
-    teacherMsg.innerText = "Erro ao processar alterações: " + errorMsg;
+    const erroTexto = error?.text || error?.message || (typeof error === 'string' ? error : JSON.stringify(error)) || "Erro desconhecido";
+    msgDiv.className = "message error";
+    msgDiv.innerText = "Erro ao salvar/enviar: " + erroTexto;
   }
 });
 
-const tipoImpressaoSelect = document.getElementById('tipoImpressao');
-tipoImpressaoSelect.addEventListener('change', () => {
-  const tipo = tipoImpressaoSelect.value;
-  document.getElementById('grupoSelectPolo').style.display = (tipo === 'polo') ? 'block' : 'none';
-});
+// --- Funções de Impressão ---
+const assinaturaHtml = `
+    <div class="print-signature">
+        <img src="assinaturaGov.png" alt="Assinatura Digital">
+    </div>
+`;
 
-// Imprimir Aluno Selecionado
-document.getElementById('btnImprimirSelecionado').addEventListener('click', () => {
-  if (!idAtividadeAtiva) {
-    alert("Selecione um trabalho na consulta para imprimir sua ficha.");
-    return;
-  }
-
+function generateSingleActivityPrintContent() {
   const aluno = listaAtividades.find(a => a.id === idAtividadeAtiva);
-  if (!aluno) return;
+  if (!aluno) return '';
 
-  const printArea = document.getElementById('printArea');
-  
-  let html = `
+  return `
     <div class="print-page">
       <h2>Ficha de Avaliação Acadêmica</h2>
       <p><strong>Nome do Aluno:</strong> ${aluno.nomeAluno || 'Não informado'}</p>
       <p><strong>E-mail:</strong> ${aluno.emailAluno || 'Não informado'}</p>
-      <p><strong>Polo:</strong> ${aluno.polo || 'Não informado'}</p>
-      <p><strong>Dias de Aula:</strong> ${aluno.diasAula || 'Não informado'}</p>
-      <p><strong>Turno:</strong> ${aluno.turno || 'Não informado'}</p>
-      <p><strong>Módulo:</strong> ${aluno.modulo || 'Não informado'}</p>
-      <p><strong>Tipo de Avaliação:</strong> ${aluno.tipoAvaliacao || 'Atividade'}</p>
+      <p><strong>Polo:</strong> ${aluno.polo || 'Não informado'} | <strong>Turno:</strong> ${aluno.turno || 'Não informado'}</p>
+      <p><strong>Módulo:</strong> ${aluno.modulo || 'Não informado'} | <strong>Tipo:</strong> ${aluno.tipoAvaliacao || 'Não informado'}</p>
       <p><strong>Título do Trabalho:</strong> ${aluno.tituloTrabalho || 'Não informado'}</p>
-      <p><strong>Observação / Descrição:</strong> ${aluno.descricao || 'Sem descrição'}</p>
-      <p><strong>Link do Trabalho:</strong> ${aluno.urlTrabalho || 'Sem link'}</p>
-      <p><strong>Arquivo Anexado:</strong> ${aluno.nomeArquivoOriginal ? `<a href="${aluno.arquivoUrl}" target="_blank">${aluno.nomeArquivoOriginal}</a>` : 'Nenhum arquivo'}</p>
-      <p><strong>Nota Atribuída:</strong> ${aluno.nota !== undefined && aluno.nota !== '' ? aluno.nota : 'Não avaliado'}</p>
+      <p><strong>Descrição:</strong> ${aluno.descricao || 'Não informada'}</p>
+      <p><strong>Nota Atribuída:</strong> ${aluno.nota || 'Não avaliado'}</p>
       <p><strong>Comentários / Feedback:</strong> ${aluno.comentario || 'Sem comentários'}</p>
+      ${assinaturaHtml}
     </div>
   `;
+}
 
-  printArea.innerHTML = html;
-
-  setTimeout(() => {
-    window.print();
-  }, 300);
-});
-
-// Imprimir Relatório Geral
-document.getElementById('btnImprimirGeral').addEventListener('click', async () => {
-  const tipo = document.getElementById('tipoImpressao').value;
+function handlePrintSelectedActivity() {
   const printArea = document.getElementById('printArea');
-  printArea.innerHTML = "<p>Carregando dados para impressão...</p>";
+  if (!idAtividadeAtiva) {
+    alert("Selecione um trabalho na consulta para imprimir sua ficha.");
+    return;
+  }
+  printArea.innerHTML = generateSingleActivityPrintContent();
+  setTimeout(() => window.print(), 300);
+}
+
+async function handlePrintGeneralReport() {
+  const printArea = document.getElementById('printArea');
+  printArea.innerHTML = "<p>Carregando dados para relatório geral...</p>";
+
+  const polosSelecionados = Array.from(document.querySelectorAll('input[name="filtroPolo"]:checked')).map(cb => cb.value);
+  const moduloSelecionado = document.getElementById('filtroModulo').value;
+  const tipoSelecionado = document.getElementById('filtroTipo').value;
 
   try {
     let q = collection(db, "atividade");
-    if (tipo === 'polo') {
-      const poloSelecionado = document.getElementById('selectPoloFiltro').value;
-      q = query(collection(db, "atividade"), where("polo", "==", poloSelecionado));
-    }
-
     const querySnapshot = await getDocs(q);
     
-    if (querySnapshot.empty) {
-      alert("Nenhuma atividade encontrada para esse critério.");
-      printArea.innerHTML = "";
-      return;
-    }
-
     let html = '';
+    let contador = 0;
 
     querySnapshot.forEach((docSnap) => {
       const data = docSnap.data();
+
+      // Aplicar filtros localmente
+      if (polosSelecionados.length > 0 && !polosSelecionados.includes(data.polo)) return;
+      if (moduloSelecionado && data.modulo !== moduloSelecionado) return;
+      if (tipoSelecionado && data.tipoAvaliacao !== tipoSelecionado) return;
+
+      contador++;
       html += `
         <div class="print-page">
           <h2>Relatório de Entrega Acadêmica</h2>
           <p><strong>Nome do Aluno:</strong> ${data.nomeAluno || 'Não informado'}</p>
           <p><strong>E-mail:</strong> ${data.emailAluno || 'Não informado'}</p>
-          <p><strong>Polo:</strong> ${data.polo || 'Não informado'}</p>
-          <p><strong>Dias de Aula:</strong> ${data.diasAula || 'Não informado'}</p>
-          <p><strong>Turno:</strong> ${data.turno || 'Não informado'}</p>
-          <p><strong>Módulo:</strong> ${data.modulo || 'Não informado'}</p>
-          <p><strong>Tipo de Avaliação:</strong> ${data.tipoAvaliacao || 'Atividade'}</p>
+          <p><strong>Polo:</strong> ${data.polo || 'Não informado'} | <strong>Módulo:</strong> ${data.modulo || 'Não informado'}</p>
           <p><strong>Título do Trabalho:</strong> ${data.tituloTrabalho || 'Não informado'}</p>
-          <p><strong>Observação / Descrição:</strong> ${data.descricao || 'Sem descrição'}</p>
-          <p><strong>Link do Trabalho:</strong> ${data.urlTrabalho || 'Sem link'}</p>
-          <p><strong>Arquivo Anexado:</strong> ${data.nomeArquivoOriginal ? `<a href="${data.arquivoUrl}" target="_blank">${data.arquivoUrl}</a>` : 'Nenhum arquivo'}</p>
-          <p><strong>Nota Atribuída:</strong> ${data.nota !== undefined && data.nota !== '' ? data.nota : 'Não avaliado'}</p>
+          <p><strong>Nota Atribuída:</strong> ${data.nota || 'Não avaliado'}</p>
           <p><strong>Comentários / Feedback:</strong> ${data.comentario || 'Sem comentários'}</p>
+          ${assinaturaHtml}
         </div>
       `;
     });
 
-    printArea.innerHTML = html;
-
-    setTimeout(() => {
-      window.print();
-    }, 500);
-
-  } catch (error) {
-    alert("Erro ao gerar relatório: " + error.message);
-    printArea.innerHTML = "";
-  }
-});
-
-// AVALIAÇÃO AUTOMÁTICA DA IA (Tratamento para GitHub / GitHub Pages / Sites gerais)
-window.analisarTrabalhoEAtribuirNotaIA = async function() {
-  const campoNota = document.getElementById('profNota');
-  const campoComentario = document.getElementById('profComentario');
-
-  const selectAluno = document.getElementById('selectAluno');
-  if (!selectAluno || !selectAluno.value) return;
-
-  const nomeAluno = selectAluno.options[selectAluno.selectedIndex]?.text || "Aluno";
-  let urlTrabalho = document.getElementById('profUrlTrabalho').value.trim();
-
-  // Se já houver nota diferente de vazia ou padrão
-  if (campoNota.value && campoNota.value !== "7.0") return;
-
-  if (!urlTrabalho) {
-    campoNota.value = "7.0";
-    campoComentario.value = `Atenção: Nenhum link foi fornecido por ${nomeAluno}.`;
-    return;
-  }
-
-  // Formata a URL garantindo o protocolo
-  if (!/^https?:\/\//i.test(urlTrabalho)) {
-    urlTrabalho = 'https://' + urlTrabalho;
-    document.getElementById('profUrlTrabalho').value = urlTrabalho;
-  }
-
-  campoComentario.value = "🤖 Conectando e analisando o projeto do aluno no GitHub/Web...";
-
-  try {
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(urlTrabalho)}`;
-    const response = await fetch(proxyUrl);
-    
-    if (!response.ok) {
-      throw new Error("Não foi possível conectar ao servidor remoto.");
-    }
-
-    const data = await response.json();
-    const htmlContent = data.contents;
-
-    if (!htmlContent || htmlContent.length < 30) {
-      campoNota.value = "7.0";
-      campoComentario.value = `O link retornado para ${nomeAluno} está inacessível ou vazio.`;
+    if (contador === 0) {
+      printArea.innerHTML = "<p>Nenhum registro encontrado com os filtros selecionados.</p>";
       return;
     }
 
-    let notaBase = 7.0;
-    let observacoes = [];
-
-    // Verificação específica se for um repositório GitHub tradicional
-    const isGitHubRepo = urlTrabalho.includes('github.com') && !urlTrabalho.includes('github.io');
-
-    if (isGitHubRepo) {
-      observacoes.push("Repositório GitHub identificado");
-      notaBase += 1.0;
-
-      if (htmlContent.includes('README') || htmlContent.includes('readme')) {
-        notaBase += 1.0;
-        observacoes.push("Documentação README presente");
-      }
-      
-      if (htmlContent.includes('index.html') || htmlContent.includes('.js') || htmlContent.includes('.css')) {
-        notaBase += 1.0;
-        observacoes.push("Arquivos de código-fonte estruturados");
-      }
-    } else {
-      // Verificação para sites publicados (GitHub Pages, Vercel, Netlify, etc.)
-      const parser = new DOMParser();
-      const docHtml = parser.parseFromString(htmlContent, 'text/html');
-
-      const temHeader = docHtml.querySelector('header, nav, main, section, article, div') ? true : false;
-      if (temHeader) {
-        notaBase += 1.0;
-        observacoes.push("Estrutura HTML verificada");
-      }
-
-      const scripts = docHtml.querySelectorAll('script').length;
-      const linksCss = docHtml.querySelectorAll('link[rel="stylesheet"], style').length;
-
-      if (linksCss > 0 || htmlContent.includes('style')) {
-        notaBase += 1.0;
-        observacoes.push("Estilização CSS identificada");
-      }
-      if (scripts > 0 || htmlContent.includes('script')) {
-        notaBase += 1.0;
-        observacoes.push("Interatividade JS/Scripts presentes");
-      }
-    }
-
-    let notaFinal = Math.min(10.0, Math.max(7.0, notaBase)).toFixed(1);
-
-    let parecer = `Análise do projeto de ${nomeAluno}:\n`;
-    parecer += `- Link verificado: ${urlTrabalho}\n`;
-    parecer += `- Pontos observados: ${observacoes.join(', ')}.\n`;
-    parecer += `Nota sugerida: ${notaFinal}.`;
-
-    campoNota.value = notaFinal;
-    campoComentario.value = parecer;
+    printArea.innerHTML = html;
+    setTimeout(() => window.print(), 300);
 
   } catch (error) {
-    console.error("Erro na inspeção do link:", error);
-    campoNota.value = "7.0";
-    campoComentario.value = `Aviso: O link "${urlTrabalho}" requer validação manual pelo professor. Nota base (7.0) atribuída preventivamente.`;
+    printArea.innerHTML = `<p class="message error">Erro ao gerar relatório: ${error.message}</p>`;
   }
-};
+}
+
+// Event Listeners Principais
+document.getElementById('selectAluno').addEventListener('change', handleTeacherStudentSelectionChange);
+document.getElementById('btnImprimirSelecionado').addEventListener('click', handlePrintSelectedActivity);
+document.getElementById('btnImprimirGeral').addEventListener('click', handlePrintGeneralReport);
