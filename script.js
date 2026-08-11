@@ -321,8 +321,8 @@ document.getElementById('btnCorrigirIA').addEventListener('click', async () => {
     statusEl.style.color = '#3730a3';
     statusEl.innerText = "🤖 A Inteligência Artificial está analisando o trabalho...";
 
-    // Chave de API informada no seu código atual
-    const apiKey = "AQ.Ab8RN6JhsgnZD3zEZ4XSuTYOsYNRCtFxE0KMFCFNULffjWScRQ";
+    // Substitua pela sua chave válida do Google AI Studio (começada com AIzaSy...) caso precise atualizar
+    const apiKey = "AIzaSyAjwv9_na1rBCKXDR4VnwrggUYxz976Pfc";
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     const promptText = `
@@ -342,7 +342,7 @@ document.getElementById('btnCorrigirIA').addEventListener('click', async () => {
       }
     `;
 
-   const response = await fetch(url, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -357,18 +357,16 @@ document.getElementById('btnCorrigirIA').addEventListener('click', async () => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro na API do Gemini: ${response.statusText}`);
+      throw new Error(`Erro na API do Gemini: ${response.statusText} (Status ${response.status})`);
     }
 
     const data = await response.json();
     const textResult = data.candidates[0].content.parts[0].text.trim();
     
-    // Limpeza de possíveis marcações de bloco de código do markdown
     const jsonClean = textResult.replace(/```json/g, '').replace(/```/g, '').trim();
     const dadosIA = JSON.parse(jsonClean);
 
     if (dadosIA.nota && dadosIA.comentario) {
-      // Garante que a nota esteja dentro do intervalo permitido 7.0 e 10.0
       let notaFinal = parseFloat(dadosIA.nota);
       if (notaFinal < 7) notaFinal = 7.0;
       if (notaFinal > 10) notaFinal = 10.0;
@@ -418,7 +416,7 @@ document.getElementById('btnSalvarNota').addEventListener('click', async () => {
     const index = listaAtividades.findIndex(a => a.id === idAtividadeAtiva);
     if (index !== -1) {
       listaAtividades[index].nota = notaInput;
-      listaAtividades[index].comentario = comentario;
+      listaAtividade[index].comentario = comentario;
     }
 
     const alunoAtual = listaAtividades.find(a => a.id === idAtividadeAtiva);
