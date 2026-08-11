@@ -3,7 +3,7 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.16.0/firebas
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
-//import { GoogleGenAI } from "https://esm.run/@google/genai";
+import { GoogleGenAI } from "https://esm.run/@google/genai";
 
 (function() {
   emailjs.init("Q8SiVr5mU4QBiKIK8");
@@ -321,8 +321,9 @@ document.getElementById('btnCorrigirIA').addEventListener('click', async () => {
     statusEl.style.color = '#3730a3';
     statusEl.innerText = "🤖 A Inteligência Artificial está analisando o trabalho...";
 
-    // Instancia o cliente da IA (substitua a chave se necessário ou utilize a variável de ambiente)
-    const ai = new GoogleGenAI({ apiKey: "AQ.Ab8RN6JhsgnZD3zEZ4XSuTYOsYNRCtFxE0KMFCFNULffjWScRQ" });
+    // Chave de API informada no seu código atual
+    const apiKey = "AQ.Ab8RN6JhsgnZD3zEZ4XSuTYOsYNRCtFxE0KMFCFNULffjWScRQ";
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     const promptText = `
       Você é um professor sênior especialista em tecnologia e avaliação acadêmica.
@@ -341,12 +342,27 @@ document.getElementById('btnCorrigirIA').addEventListener('click', async () => {
       }
     `;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: promptText,
+   const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [{ text: promptText }]
+          }
+        ]
+      })
     });
 
-    const textResult = response.text.trim();
+    if (!response.ok) {
+      throw new Error(`Erro na API do Gemini: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const textResult = data.candidates[0].content.parts[0].text.trim();
+    
     // Limpeza de possíveis marcações de bloco de código do markdown
     const jsonClean = textResult.replace(/```json/g, '').replace(/```/g, '').trim();
     const dadosIA = JSON.parse(jsonClean);
