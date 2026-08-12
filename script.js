@@ -107,7 +107,7 @@ document.getElementById('studentForm').addEventListener('submit', async (e) => {
 
   try {
     msgDiv.className = "message success";
-    msgDiv.innerText = "Enviando atividade...";
+    msgDiv.innerText = "Atividade enviada...";
     let arquivoUrl = "";
     let nomeArquivoOriginal = "";
 
